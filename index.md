@@ -3,9 +3,11 @@ layout: default
 title: Fernando González Cortés
 ---
 
-# Intro
-	
-Independent software developer whose main interests are Open Source, Geographical Information Systems, statistics and Artificial Intelligence.
+[foto]: foto.jpg
+
+# Fernando González Cortés
+
+![fergonco][foto] Independent software developer whose main interests are Open Source, Geographical Information Systems, statistics and Artificial Intelligence.
 
 As a software developer I care about:
 
@@ -15,7 +17,7 @@ As a software developer I care about:
 * Studying how project goals relate to tasks a software team needs to execute on.
 
 <!--
-You can take a look on my day to day activities in my [blog]().
+You can take a look at my daily activities in my [blog](/blog.html).
 -->
 
 # Own works
@@ -36,14 +38,14 @@ I have developed on my own:
 
 I have been part of these development teams:
 
-* [gvSIG]()
-* [gvSIG CE]()
-* [OrbisGIS]()
-* [Geoladris]()
+* [gvSIG Destkop](http://www.gvsig.com/es/productos/gvsig-desktop)
+* [gvSIG CE](http://gvsigce.org/)
+* [OrbisGIS](http://orbisgis.org/)
+* [Geoladris](https://github.com/geoladris/core/)
 
 I have done (small) contributions to
 
-* [Geotools/Geoserver]()
+* [Geotools](http://geotools.org/)/[Geoserver](http://geoserver.org/)
 
 I am a founder member of [geomati.co](http://geomati.co)
 
