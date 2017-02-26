@@ -13,9 +13,9 @@ What I did was this:
 1. Start Kartoza docker container
 2. Copy their *postgresql.conf* to some folder, with this command:
 
-```
-docker cp <container>:/etc/postgresql/9.3/main/postgresql.conf /var/pg/postgresql.conf
-```
+   ```
+   docker cp <container>:/etc/postgresql/9.3/main/postgresql.conf /var/pg/postgresql.conf
+   ```
 
 3. Edit log_statement
 4. Start the container again, this time mapping your own *postgresql.conf* file with `-v /var/pg/postgresql.conf:/etc/postgresql/9.3/main/postgresql.conf`
