@@ -1,6 +1,7 @@
 body {
     margin: 60px auto;
     width: 70%;
+    font-size: 1.5em;
 }
 img {
     float: right;
@@ -24,11 +25,10 @@ a:hover {
     text-decoration: underline;
 }
 h1 {
-    font-size: 3em;
+    font-size: 2em;
     font-family:'Helvetica', 'Arial', 'Sans-Serif';
 }
 p {
-    font-size: 1.5em;
     line-height: 1.4em;
     color: #333;
 }
@@ -37,11 +37,15 @@ footer {
     font-size: .8em;
 }
 
-ul.posts { 
+ul,ol { 
     margin: 20px auto 40px; 
-    font-size: 1.5em;
+    color: #333;
 }
 
-ul.posts li {
+li {
+    margin-bottom: 0.5em;
+}
+
+ul.postlist li {
     list-style: none;
 }
