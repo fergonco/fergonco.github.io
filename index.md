@@ -34,6 +34,10 @@ I have developed on my own:
 -->
 You can take a look at my daily activities in my [blog](/blog.html).
 
+A list of my personal projects (to be completed!):
+
+* [Border rampage](http://139.162.166.122/border-rampage/): Work in progress. A map that shows the speeds of the public transport in the border between Geneva and Saint Genis-Pouilly and Ferney Voltaire and allows to browse the last 24 hours of this data.
+
 I have been part of these development teams:
 
 * [gvSIG Desktop](http://www.gvsig.com/es/productos/gvsig-desktop)
