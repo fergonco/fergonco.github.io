@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Fergonco Blog
+title: Fergonco's log
 ---
 # {{ page.title }}
 
