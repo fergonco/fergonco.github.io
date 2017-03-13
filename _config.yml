@@ -1,2 +1,3 @@
 name: Fernando González Cortés
 permalink: /blog/:year/:month/:day/:title
+markdown: kramdown
