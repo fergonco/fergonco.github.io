@@ -4,8 +4,6 @@ title: 'Deploy a service from scratch to monitor data gathering'
 date: 2017-03-13
 ---
 
-# Deploy a service from scratch to monitor data gathering
-
 Sometimes we want to be sure that your services are running and didn't terminate for whatever reason. In those cases, normally I use tools like [Monit](https://mmonit.com/monit/) and it is fair enough.
 
 This case is a bit more complicated though. The service I want to monitor queries a REST API and stores some real time data in an database, building a historic. By ensuring that the service is up I know the service *tries* to build the historic but not if it actually does. What if there is something that keeps some data from being stored? It could be a bug in the data gathering code, some network problems, etc. Imagine discovering after some weeks that your data was just not saved in the database.
