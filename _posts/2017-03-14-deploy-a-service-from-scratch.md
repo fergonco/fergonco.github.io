@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'Deploy a service from scratch to monitor data gathering'
-date: 2017-03-13
+date: 2017-03-14
 ---
 
 Sometimes we want to be sure that your services are running and didn't terminate for whatever reason. In those cases, normally I use tools like [Monit](https://mmonit.com/monit/) and it is fair enough.
