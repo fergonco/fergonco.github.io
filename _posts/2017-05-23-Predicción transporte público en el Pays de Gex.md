@@ -1,17 +1,24 @@
 ---
 layout: post
-title: 'Predicción transporte público en el Pays de Gex'
+title: 'Traffic prediction based on public transport performance in Pays de Gex (I)'
 date: 2017-05-23
 ---
 
-In the last months I have been working on a project to predict the traffic on the area where I live. This a series of posts that will cover the following aspects of the project:
+In the last months I have been working on a project to predict the traffic on the area where I live. This is the first post of a series that will cover the following aspects of the project:
 
-* Purpose of the project and workflow
-* Implementation of the visualization
+* Purpose of the project and workflow (this post)
+* Data gathering
+* Data model
+* Visualization of the data
+* Analysis of the data
 * Prediction
 
-I live currently in Pays de Gex, a stripe of land along the border between France and the Geneva canton, in Switzerland. I will summarize the socioeconomic details by saying that salaries and prices are much higher in Geneva than in Pays de Gex, and many people working at CERN or UN are living in Pays de Gex and commute every day to go to work. The opposite happens outside of working hours, when people in Geneva come to Pays de Gex for shopping, refueling, etc. All these commutes take place through the border between France and Switzerland, which are normally just one lane wide and suppose a bottleneck, even more when border police is controlling.
+I live currently in Pays de Gex, a stripe of land along the border between France and the Geneva canton, in Switzerland. I will summarize the socioeconomic details by saying that salaries and prices are much higher (like multiplying by 3, to get an idea) in Geneva than in Pays de Gex, and many people working at CERN or UN are living in the cheaper Pays de Gex and commute every day to go to work. The opposite happens outside of working hours, when people in Geneva come to Pays de Gex for shopping, refueling, etc. In the following map you can see Geneva, surrounded by France.
 
+
+All these commutes take place through the border between France and Switzerland, which are normally just one lane wide and suppose a bottleneck, even more when border police is controlling.
+
+![](/assets/pays-de-gex.png)
 [Bild mit Pays de Gex, Canton de Geneve und grenze]
 
 From my personal perspective, it is a very nice area where nature is gorgeous and weather is acceptable (I come from Valencia, Spain, and I have a high standard regarding weather!). I can just put some boots on and go out to climb Le Reculet and do pictures like these:
