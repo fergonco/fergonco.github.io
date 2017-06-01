@@ -1,0 +1,255 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Histórico y predicción del tráfico en la frontera Franco-Suiza del Pays de Gex</title>
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/solarized.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section data-markdown>
+					## Histórico y predicción del tráfico en la frontera Franco-Suiza del Pays de Gex
+					Fernando González Cortés
+
+					fernando.gonzalez@geomati.co
+
+					http://fergonco.org/
+				</section>
+				<section data-markdown>
+					#### La frontera del Pays de Gex
+					#### Implementación 
+					#### Análisis datos y predicción
+					#### Aplicaciones
+					#### Próximos pasos
+				</section>
+				<section data-markdown>
+					### > La frontera del Pays de Gex
+					#### Implementación 
+					#### Análisis datos y predicción
+					#### Aplicaciones
+					#### Próximos pasos
+				</section>
+				<section data-markdown>
+					## Vente para Suiza, Pepe
+					![](images/vente-suiza-pepe.jpg)
+				</section>
+				<section data-markdown>
+					![](images/france-suisse.png)
+				</section>
+				<section data-markdown>
+					![](images/canton-geneve.png)
+				</section>
+				<section data-markdown>
+					![](images/canton-geneve-pays-de-gex.png)
+				</section>
+				<section data-markdown>
+					![](images/pays-de-gex-roads.png)
+				</section>
+				<section data-markdown>
+					![](images/frontera2.jpg)
+				</section>
+				<section data-markdown>
+					![](images/prediction-tpg.png)
+				</section>
+				<section data-markdown>
+					#### La frontera del Pays de Gex
+					### > Implementación 
+					#### Análisis datos y predicción
+					#### Aplicaciones
+					#### Próximos pasos
+				</section>
+				<section>
+					<h2>Idea general</h2>
+					<ul>
+						<li class="fragment">Planificar desplazamientos mejor.</li>
+						<li class="fragment">Transports Publics Genevois (TPG).
+							<ul>
+							<li>Líneas de autobús: Y, O y F.</li>
+							<li>API para monitorizar los vehículos.</li>
+							</ul>
+						</li>
+						<li class="fragment">No hay vía dedicada para autobús en el Pays de Gex.</li>
+						<li class="fragment">Además de mostrar el estado actual de la red, puedo guardar un histórico y hacer predicciones.</li>
+					</ul>
+				</section>
+				<section data-markdown>
+					### Líneas Y, O y F
+					![](images/tpg-lines.png)
+				</section>
+				<section>
+					<h2>Implementación</h2>
+					<ul>
+						<li class="fragment">Obtener las llegadas de los autobuses a cada parada usando la API de TPG.</li>
+						<li class="fragment">Calcular velocidades y meter en la base de datos.</li>
+						<li class="fragment">Mapear el trayecto de los autobuses.</li>
+						<li class="fragment">Visualizar último estado.</li>
+					</ul>
+				</section>
+				<section data-markdown>
+					## API Transports Publics Genevois
+					* /GetAllNextDepartures
+					* /GetThermometer
+
+					![](images/thermometer.png)
+				</section>
+				<section data-markdown>
+					![](images/dfd-view1.jpg)
+				</section>
+				<section data-markdown>
+					![](images/dfd-view2.jpg)
+				</section>
+				<section data-markdown>
+					![](images/dfd-view3.jpg)
+				</section>
+				<!--
+				<section data-markdown>
+					## Visor
+					* Realizado con Geoladris (https://github.com/geoladris/)
+					* Mapa: OpenLayers 2 inicialmente -> Ahora Leaflet
+					* Linea de tiempo: Desarrollo propio basado en SVG
+					* Estilo basado en generación de los paths con la dirección correcta y un SLD con *PerpendicularOffset* en GeoServer
+				</section>
+				<section>
+					<img class="stretch" src="images/sld.png"/>
+				</section>
+				-->
+				<section data-markdown>
+					![](images/viewer.png)
+				</section>
+				<section data-markdown>
+					#### La frontera del Pays de Gex
+					#### Implementación 
+					### > Análisis datos y predicción
+					#### Aplicaciones
+					#### Próximos pasos
+				</section>
+				<section data-markdown>
+					![](images/eda-path.png)
+				</section>
+				<section data-markdown>
+					![](images/density.png)
+				</section>
+				<section data-markdown>
+					![](images/density-per-day.png)
+				</section>
+				<section data-markdown>
+					![](images/histograms-per-weather.png)
+				</section>
+				<section data-markdown>
+					![](images/scatterplot-minutes-speed.png)
+				</section>
+				
+				<section data-markdown>
+					## Modelo
+					* Preparación de los datos.
+					* Modelo de regresión lineal con R.
+					
+					      fit<-lm(data = speeds, speed ~ morningrush * weekday * weather)
+
+					* Ejemplos de predicción:
+
+					      [1] "morningrush = TRUE, Tuesday, clearorclouds"
+					           fit      lwr      upr
+					      1 23.04762 12.74836 33.34687
+
+					      [1] "morningrush = TRUE, Tuesday, fog"
+					           fit        lwr      upr
+					      1 17.88889 -0.4934951 36.27127
+				</section>
+				<!--
+				<section data-markdown>
+					* Validación cruzada de predicciones con margen de 95%
+					      [1] 0.9283388
+					      [1] 0.9674267
+					      [1] 0.9705882
+					      [1] 0.9444444
+					      [1] 0.9379085
+				</section>
+				-->
+				<section data-markdown>
+					#### La frontera del Pays de Gex
+					#### Implementación 
+					#### Análisis datos y predicción
+					### > Aplicaciones
+					#### Próximos pasos
+				</section>
+				<section>
+					<h2>Aplicaciones</h2>
+					<ul>
+					<li class="fragment">Visualización de la predicción en el visor.</li>
+					<li class="fragment">Planificador de rutas teniendo en cuenta la estimación.</li>
+					<li class="fragment">Planificación urbana: Cálculo de isócronas por hora, indicadores de congestión, ...</li>
+					</ul>
+				</section data-markdown>
+				<section data-markdown>
+					#### La frontera del Pays de Gex
+					#### Implementación 
+					#### Análisis datos y predicción
+					#### Aplicaciones
+					### > Próximos pasos
+				</section>
+				<section>
+					<h2>Próximos pasos</h2>
+					<ul>
+					<li class="fragment">Añadir más líneas de la red de TPG.</li>
+					<li class="fragment">Seguir recogiendo datos para tener más datos con meteorología adversa.</li>
+					<li class="fragment">Mejorar el método de predicción si es posible.</li>
+					<li class="fragment">Incorporar trazas GPS públicas y extender el modelo a más vías.</li>
+					</ul>
+				</section>
+				<section data-markdown>
+					# Y sobre todo...
+				</section>
+				<section data-markdown>
+					## Encontrar alguien que quiera aplicar alguna de estas ideas y apoyar el proyecto.
+				</section>
+				<section data-markdown>
+					## Referencias
+					* Visor: http://fergonco.org/border-rampage/
+					* Código: https://github.com/fergonco/traffic-viewer/
+					
+					Fernando González Cortés (http://fergonco.org/)
+				</section>
+			</div>
+			<div style="position:absolute; bottom:15px; left:15px; margin-left:0px; z-index: 20">
+					<a href="http://geomati.co" target="_blank"><img src="logo_geomatico_256.png" height="150px"/></a>
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				transition : "none",
+				history: true,
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>
