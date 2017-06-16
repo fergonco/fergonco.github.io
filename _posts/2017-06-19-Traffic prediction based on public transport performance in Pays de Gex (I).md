@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'Traffic prediction based on public transport performance in Pays de Gex (I)'
-date: 2017-06-16
+date: 2017-06-19
 ---
 
 In the last months I have been working on a project to predict the traffic on the area where I live. This is the first post of a series that will cover all aspects of the project. In this one I give just the context.
