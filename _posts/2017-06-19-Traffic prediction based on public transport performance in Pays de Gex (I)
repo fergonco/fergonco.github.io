@@ -22,19 +22,21 @@ From my personal perspective, it is a very nice area where nature is gorgeous an
 
 ![](/assets/reculet.jpg)
 
-but somehow humans didn't manage well to set the rules there and they spend a lot of energy and time in their cars going here and there.
+But somehow humans didn't manage well to set the rules there and they spend a lot of energy and time in their cars going here and there.
 
-I rarely go to the swiss side but there are cases when you cannot avoid it. For example if I am flying, Geneva airport is 45 minutes by bus:
+I rarely go to the swiss side but there are cases when I cannot avoid it. For example if I am flying, Geneva airport is 45 minutes by bus:
 
 ![](/assets/prediction-tpg.png)
 
 ... but this bus is crossing the border! So actually it can take 20 to 30 minutes more. So I decided to investigate what I could do, and it was this:
 
-Geneva public transport system, [TPG](http://tpg.ch/), offers a REST API that allows querying the arrival time from their vehicles to each stop. Normally there is a relation between the time for the bus to get from one stop to the other, and in this case the relation is really strong because TPG public transport does not have a dedicated lane in Pays de Gex. As the following image shows, there are three TPG lines servicing in Pays de Gex: F, O and Y (recently I learned there are more!).
+Geneva public transport system, [TPG](http://tpg.ch/), offers a REST API that allows querying the arrival time from their vehicles to each stop. Normally there is a relation between traffic congestion and the time for the bus to get from one stop to the other, and in this case the relation is really strong because TPG public transport does not have a dedicated lane in Pays de Gex. As the following image shows, there are three TPG lines servicing in Pays de Gex: F, O and Y (recently I learned there are more!).
 
 ![](/assets/tpg-lines.jpg)
 
 It came to my mind that I can have a near real-time traffic map by registering the time elapsed between a bus reaching two stops. Furthermore, if I keep a historic of all these data, along with weather conditions and work and school holidays I may be able to build a model and predict the traffic for the roads the buses use.
+
+You can see the real-time map here: http://fergonco.org/border-rampage/
 
 Next posts will be more technical and I'll write about:
 
