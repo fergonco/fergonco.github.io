@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 'Return of Investment on automatic testing'
+title: 'Return of investment on automatic testing'
 date: 2017-06-19
 ---
 So, why do we write tests? We do write tests because it allows us to finish the development quicker. By writing tests we achieve with less effort the point where the software we build does what it has to do. How?
