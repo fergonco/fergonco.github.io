@@ -1,22 +1,24 @@
 ---
 layout: post
 title: 'Functional vs unit testing'
-date: 2017-06-19
+date: 2017-06-26
 ---
-I posted some time ago about how I fixed a memory leak. This process changed (or reverted back) my view on testing and in this post I explain how. Recently I wrote about (the return of investment for automatic testing)[] and you may want to take a look.
+I posted some time ago about how I fixed a memory leak. This process changed (or reverted back) my view on testing and in this post I explain why. Recently I wrote about [the return of investment for automatic testing](http://fergonco.org/2017/06/19/ROI-of-testing.html) and you may want to take a look.
 
-Very early in my career I started doing automatic testing on my projects. It was a disorganized test suite that covered the functionalities of the software I was building. There were no unit tests. The suite did its work and I delivered a stable product.
+Very early in my career I started doing automatic testing on my projects. In one of them, a SQL implementation, I remember having a rather disorganized test suite with around 300 functional tests that basically gave SQL scripts to the interpreter and checked for results. There were no unit tests but the suite did its work: the software was stable and regressions were rare even if I did refactor the internals often.
 
-Then I learned that one is supposed to write unit tests (in addition to functional tests). The tests has to be written first. There is test driven development and many more things. And all of these techniques and methodologies were well founded. I don't mean in this post they are not, but after some years of developing I finally decided to drop all that and come back to focus on functional test suites. Why?
+As years went by I learned that I was doing testing wrong: one is supposed to write unit tests (in addition to functional tests), the tests has to be written first, there is test driven development, etc. And all of these techniques and methodologies were well founded.
 
-In the last years I have been trying to build a unit test base in all my projects. You are supposed to test early so that your code is testable. If it is not, then your unit is doing too many things and you have to refactor it into smaller units. You have to make it testable.
+So I tried to cover my units (typically Java classes or some Javascript similar) with unit test cases. Then I found that some of my units where not easy to test and that it is an indicator of bad design. I didn't want to have a bad design so I adapted the units so that they were testable.
 
-The benefits of unit testing is that, at this small scale, they identify very clearly where is the bug. This reduces a lot the time for debugging. But in my experience, unit tests introduce hidden costs:
+Until recently, when adapting my code introduced a memory leak that took me some effort to discover and was the subject of another post ([here](http://fergonco.org/2017/04/13/Docker-container-Java-heap-dump-analysis-(follow-up))). This post can be summarized like this: while testing a method, I wanted to mock an object that was local to that method and, therefore, could be garbage collected after the method execution finished. The object internally didn't free the memory it used, but as it was garbage collected, this was no problem. Then, in order to mock this object. I moved it to the class level so that I could pass a mock in the constructor of the class, which kept this object from being garbage collected and introduced the memory leak. Silly? Yes. Could be done better? Yes. But it did happen to me and affected negatively the productivity.
 
-1. Unit tests affect your code. You have to make your code testable. I don't think testable units lead to the design that is best for the development process so unit testing is getting on the way to design.
+So, for me, the benefits of unit testing is that, at this small scale, they identify very clearly where is the bug and this reduces a lot the time for debugging. But in my case, unit tests introduce also hidden costs:
 
-2. Unit tests affect your code. Typing code introduces bugs. You can read how this changes made me introduce a memory leak in my code [here](http://fergonco.org/2017/04/13/Docker-container-Java-heap-dump-analysis-(follow-up).html). In this case the cost to fix the defect introduced to make the code testable was quite high.
+1. Unit tests affect your design. You have to make your code testable. I don't think having testable units leads to the design that is best for the development process because maybe there are some units that do not need a good design. So unit testing is getting on the way to design.
 
-3. Unit tests require a lot of maintenance. Units evolve a lot and unit tests have to evolve along. They may even disappear: some units may be replaced by some third party library or whatever and not be necessary anymore. I don't want to base my test investment on volatile units. 
+2. Unit tests affect your code. Typing code may introduce bugs. For example, the aforementioned memory leak. In this case the cost to fix the defect introduced to make the code testable was quite high.
+
+3. Unit tests require a lot of maintenance. Units evolve a lot and unit tests have to evolve along. Units may even disappear: some may be replaced by some third party library or whatever and not be necessary anymore. I don't want to base my test investment on volatile units. 
 
 So from now on I will go back to a strong functional test suite and I will write unit tests for specially complex units that I think will remain long in the project.
