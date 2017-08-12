@@ -6,7 +6,11 @@ date: 2017-06-26
 
 In the [previous post](/2017/12/12/blabla) I set the context of a project to monitor and predict the state of the border passages between Pays de Gex and Geneva. You can see it online here: [http://fergonco.org/border-rampage/](http://fergonco.org/border-rampage/).
 
-In this post I will describe the process to gather the data that feeds the map. It is a long post, so you may want to jump to lessons learned at the end.
+As one can see in the next data flow diagram, the project basically consists on gathering data from TPG public transport APIs, modelling the data, producing forecasts and drawing all this in a map:
+
+![](/assets/tpg/dfd0.png)
+
+In this post I will describe the process of gathering the data (in red).
 
 ## Data gathering process
 
