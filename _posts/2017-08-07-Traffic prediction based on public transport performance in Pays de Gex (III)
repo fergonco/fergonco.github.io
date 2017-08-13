@@ -58,6 +58,10 @@ OpenStreetMap not only has the information about the roads but it also has the r
 
 ![](/assets/tpgstoproute.png)
 
+You can see the many-to-many relationship in the following diagram:
+
+![](/assets/tpg/network-database-model.png)
+
 ## Gathered data and the unit of analysis
 
 Having all the routes between two stops in the *TPGStopRoute* table, the data gathering process just fills a table with a foreign key to it. This table is called *Shift* and it contains data like this:
