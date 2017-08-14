@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'Traffic prediction based on public transport performance in Pays de Gex (II): Data gathering'
-date: 2017-09-03
+date: 2017-09-04
 ---
 
 In the [previous post]({{ site.baseurl }}{% post_url 2017-08-07-Traffic prediction based on public transport performance in Pays de Gex (I) %}) I set the context of a project to monitor and predict the state of the border passages between Pays de Gex and Geneva. You can see it online here: [http://fergonco.org/border-rampage/](http://fergonco.org/border-rampage/).
