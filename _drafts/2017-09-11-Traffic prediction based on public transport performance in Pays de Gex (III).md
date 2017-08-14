@@ -37,7 +37,7 @@ OpenStreetMap not only has the information about the roads but it also has the r
   	  9 |   35422062 | 1191965235 | LineString(42.23...
   	 10 | 3790832520 | 3790832523 | LineString(42.23...
 
-![](/assets/osmsegment.png)
+![](/assets/tpg/osmsegment.png)
 
 * The second one, *TPGStopRoute*, contains an entry for each pair of consecutive stops in a service line, along with the distance between them. Note that the start and end stop codes are not unique because there may be two lines with the same consecutive stops but with a different route between them. Hence the *line* field.
 
@@ -56,7 +56,7 @@ OpenStreetMap not only has the information about the roads but it also has the r
 
 * The last one supports a many-to-many relationship between these two tables: for each pair of stops in specific a service line we associate a list of OSM segments.
 
-![](/assets/tpgstoproute.png)
+![](/assets/tpg/tpgstoproute.png)
 
 You can see the many-to-many relationship in the following diagram:
 
@@ -119,27 +119,27 @@ I didn't mentioned before, but the gathering process also gathers data from the 
 
 In order to take a look at the data I chose a segment whose pattern I know well: the one I always take to go to Geneva. And this was one at the CERN border, direction to Geneva:
 
-![](/assets/eda-path.png)
+![](/assets/tpg/eda-path.png)
 
 Based on my experience, the pattern should be clear: on busy days it collapses in the mornings to go to work and the rest of the day is more or less free. Producing some charts more or less confirms this pattern.
 
 First, the speed density plot shows two modes and is skewed to lower speeds.
 
-![](/assets/eda/density.png)
+![](/assets/tpg/density.png)
 
 I already expected the skew, due to the traffic jams in the morning, but the two modes were a bit surprising. A look to the density plot per day sheds some light:
 
-![](/assets/eda/density-per-day.png)
+![](/assets/tpg/density-per-day.png)
 
 To no one surprise, the speeds Saturdays and Sundays are, in general, higher and this is producing the second mode.
 
 Another variable that could have some relation was the weather. I grouped cloudy and sunny weather together because I don't think it has an effect and left all the other weather conditions. I started to gather data at the end of the winter, so there is few data about adverse weather conditions. With a bit of imagination one could see bigger skew by rain or slower speeds by mist, fog and drizzle. But definitely there is not enough data.
 
-![](/assets/eda/histograms-per-weather.png)
+![](/assets/tpg/histograms-per-weather.png)
 
 And of course, the time of the day is relevant. The next plot shows how the speeds drop between 7am and 10am. The time is expressed in minutes since midnight.
 
-![](/assets/eda/minutesday.png)
+![](/assets/tpg/minutesday.png)
 
 Surprisingly, other variables didn't correlate with *speed*, like school holidays. Probably it is the case early in the year, when the weather is not so good, but now, specially during the summer, it has a strong influence. On the next iteration I should try to include some of these variables in the model.
 
@@ -151,7 +151,7 @@ The model I am using is wrong because I am using linear regression and speed is 
 
 A residual plot would show, as expected, that they are not normal:
 
-![](/assets/eda/residuals.png)
+![](/assets/tpg/residuals.png)
 
 In the next iteration I should use some modeling technique that accommodates for the non linear relation between *minutesDay* and speed.
 

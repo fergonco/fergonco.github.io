@@ -40,7 +40,7 @@ We have a table with segments, *OSMSegment*, which contains the segments that ar
 	  2 |  768498823 | 3606163490 | LineString(42.24...
 	  3 | 3606163601 | 1549433399 | LineString(42.23...
 
-![](/assets/osmsegment.png)
+![](/assets/tpg/osmsegment.png)
 
 This *OSMSegment*s are referenced by records in *TPGStopRoute*, which contains an entry for each pair of consecutive stops of a service line and references the *OSMSegment*s that compose the route between these two stops.
 
@@ -50,7 +50,7 @@ This *OSMSegment*s are referenced by records in *TPGStopRoute*, which contains a
 	 103 | F    | LMLD         | ZIMG       | 0.685551031729394
 	 104 | F    | ZIMG         | LMLD       | 0.685551031729394
 
-![](/assets/tpgstoproute.png)
+![](/assets/tpg/tpgstoproute.png)
 
 Finally, the data gathered is stored in the *Shift* table, that contains the time elapsed between stops and the reference to the *TPGStopRoute*.
 
