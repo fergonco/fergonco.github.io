@@ -12,11 +12,11 @@ In this one I will show the process of analyzing the data and generating predict
 
 ![](/assets/tpg/dfd0.png)
 
-## Road network
+## Public transport network
 
-Before we analyze the data we have to explain how the database is organized: how the road network data is stored in the database and how the real time data the system gathers references this network.
+Before we analyze the data we have to explain how the database is organized: how the public transport network data is stored in the database and how the real time data the system gathers references this network.
 
-The road network is based on [OpenStreetMap](http://openstreetmap.org/). The Overpass API allows to download an XML file containing the nodes and paths that form the road network in that area:
+All the network data is provided by [OpenStreetMap](http://openstreetmap.org/). The Overpass API allows to download an XML file containing the nodes and paths that form the road network in that area:
 
 	wget 'http://overpass-api.de/api/map?bbox=5.9627,46.2145,6.1287,46.2782' -O network.osm.xml
 

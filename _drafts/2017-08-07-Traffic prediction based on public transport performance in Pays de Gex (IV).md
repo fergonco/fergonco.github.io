@@ -17,9 +17,7 @@ In order to draw gathered and forecast data we have to unify them in a single da
 3. how they are both unified in a single dataset and
 4. how *GeoServer* draws this dataset
 
-
-
-First I will revisit the way the road network is organized in the database. This is important to get an idea about how the measured data is transformed for visualization. Analogously, I will show how the forecast data is transformed for visualization. Finally, these 
+First I will revisit the way the public transport network is organized in the database. This is important to get an idea about how the measured data is transformed for visualization. Analogously, I will show how the forecast data is transformed for visualization. Finally, these 
 
 
 I will recall how the gathered data is stored in the database. Next, I will explain how predictions are stored. Then, a series of database views take the measured and forecasted data providing a single dataset with measured *and* forecasted data that *GeoServer* will use to draw the map. Finally, a web application will consume the map and present it to the user.
@@ -30,7 +28,7 @@ In order to show how the data is transformed I will first describe (again if you
 
 ### Database model
 
-I will start by recalling quickly how the road network is stored in the database. The following diagram shows the relevant database model.
+I will start by recalling quickly how the public transport network is stored in the database. The following diagram shows the relevant database model.
 
 ![](/assets/tpg/network-database-model.png)
 

@@ -1,10 +1,10 @@
 ---
 layout: post
 title: 'Traffic prediction based on public transport performance in Pays de Gex (II): Data gathering'
-date: 2017-06-26
+date: 2017-09-03
 ---
 
-In the [previous post](/2017/12/12/blabla) I set the context of a project to monitor and predict the state of the border passages between Pays de Gex and Geneva. You can see it online here: [http://fergonco.org/border-rampage/](http://fergonco.org/border-rampage/).
+In the [previous post]({{ site.baseurl }}{% post_url 2017-08-07-Traffic prediction based on public transport performance in Pays de Gex (I) %}) I set the context of a project to monitor and predict the state of the border passages between Pays de Gex and Geneva. You can see it online here: [http://fergonco.org/border-rampage/](http://fergonco.org/border-rampage/).
 
 As one can see in the next data flow diagram, the project basically consists on gathering data from TPG public transport APIs, modelling the data, producing forecasts and drawing all this in a map:
 
