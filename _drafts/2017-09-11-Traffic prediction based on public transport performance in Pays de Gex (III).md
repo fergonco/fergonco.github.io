@@ -6,7 +6,7 @@ date: 2017-09-11
 
 This is the third part of the series on the project about traffic prediction. You can see it online here: [http://fergonco.org/border-rampage/](http://fergonco.org/border-rampage/).
 
-In the [previous post]({{ site.baseurl }}{% post_url 2017-09-04-Traffic prediction based on public transport performance in Pays de Gex (II) %}) I introduced the process gathering data from public transport. 
+In the [previous post]({{ site.baseurl }}{% post_url 2017-09-04-Traffic prediction based on public transport performance in Pays de Gex (II) %}) I introduced the process gathering data from Geneva public transport (TPG) API. 
 
 In this one I will show the process of analyzing the data and generating predictions, in blue on the following diagram.
 
@@ -14,28 +14,28 @@ In this one I will show the process of analyzing the data and generating predict
 
 ## Public transport network
 
-Before we analyze the data we have to explain how the database is organized: how the public transport network data is stored in the database and how the real time data the system gathers references this network.
+Before analyzing the data I'll explain how the database is organized: how the public transport network data is stored in the database and how the gathered real time data references this network.
 
-All the network data is provided by [OpenStreetMap](http://openstreetmap.org/). The Overpass API allows to download an XML file containing the nodes and paths that form the road network in that area:
+All the network data is provided by [OpenStreetMap](http://openstreetmap.org/). The Overpass API allows to download an XML file containing the nodes and paths that form the road network in a specific area:
 
 	wget 'http://overpass-api.de/api/map?bbox=5.9627,46.2145,6.1287,46.2782' -O network.osm.xml
 
-OpenStreetMap not only has the information about the roads but it also has the routes that the TPG services follow (Remember TPG stands for Transports Publics Genevois, the public transport company in Geneva). I made a program that, along with some manual information about the service lines, parses this information and generates the following three tables:
+OpenStreetMap not only has the information about the roads but it also has the routes that the TPG services follow. A program takes this information and some metadata about the public transport lines and produces the following three tables:
 
 * The first one, *OSMSegment*, contains all the segments that form the TPG service routes:
 
-  	 id | startnode  |  endnode   |     geom      
-  	----+------------+------------+---------------
-  	  1 | 3735051668 |  429658525 | LineString(42.23...
-  	  2 |  768498823 | 3606163490 | LineString(42.24...
-  	  3 | 3606163601 | 1549433399 | LineString(42.23...
-  	  4 | 3790832523 | 3735051668 | LineString(42.22...
-  	  5 | 3606163490 |  768498820 | LineString(42.21...
-  	  6 |  932144719 |   35422066 | LineString(42.24...
-  	  7 |  308047791 |   35422067 | LineString(42.25...
-  	  8 | 1191965235 |  895572292 | LineString(42.21...
-  	  9 |   35422062 | 1191965235 | LineString(42.23...
-  	 10 | 3790832520 | 3790832523 | LineString(42.23...
+  	 id | startnode  |  endnode   |                         geom                          
+  	----+------------+------------+-------------------------------------------------------
+  	  1 | 3735051668 |  429658525 | LINESTRING(6.1413701 46.2103922,6.1415854 46.2105857)
+  	  2 |  768498823 | 3606163490 | LINESTRING(6.1408597 46.2098549,6.1409013 46.2099104)
+  	  3 | 3606163601 | 1549433399 | LINESTRING(6.1410869 46.210142,6.141181 46.2102227)
+  	  4 | 3790832523 | 3735051668 | LINESTRING(6.1413209 46.210348,6.1413701 46.2103922)
+  	  5 | 3606163490 |  768498820 | LINESTRING(6.1409013 46.2099104,6.1409186 46.209933)
+  	  6 |  932144719 |   35422066 | LINESTRING(6.1412324 46.2128284,6.1412561 46.2129397)
+  	  7 |  308047791 |   35422067 | LINESTRING(6.1412629 46.2129944,6.1413116 46.2135465)
+  	  8 | 1191965235 |  895572292 | LINESTRING(6.1417423 46.2107912,6.1417375 46.2108256)
+  	  9 |   35422062 | 1191965235 | LINESTRING(6.1417364 46.2107529,6.1417423 46.2107912)
+  	 10 | 3790832520 | 3790832523 | LINESTRING(6.1412051 46.210244,6.1413209 46.210348)
 
 ![](/assets/tpg/osmsegment.png)
 
@@ -54,7 +54,7 @@ OpenStreetMap not only has the information about the roads but it also has the r
   	 112 | Y    | BLDO         | RENF       | 0.383096769721964
   	 125 | Y    | AREN         | PXPH       |  0.75218625106547
 
-* The last one supports a many-to-many relationship between these two tables: for each pair of stops in specific a service line we associate a list of OSM segments.
+* The last table supports a many-to-many relationship between these two tables: for each pair of stops in a service line it associates a list of OSM segments.
 
 ![](/assets/tpg/tpgstoproute.png)
 
@@ -79,13 +79,13 @@ Having all the routes between two stops in the *TPGStopRoute* table, the data ga
 	 188474 |      80 | 1-4-2017+185086 | 1493643011000 | 185086    |      104
 	 188466 |      39 | 1-4-2017+185015 | 1493642567000 | 185015    |       72
 
-Each entry represents a vehicle reaching a stop and it contains the *timestamp* when it happened, the number of *seconds* elapsed since the previous stop and the *route_id*, which points to the *TPGStopRoute* and provides information about the exact route the vehicle followed.
+Each entry represents a vehicle arriving to a stop and it contains the *timestamp* when it happened, the number of *seconds* elapsed since the previous stop and the *route_id*, which points to the *TPGStopRoute* and provides information about the exact route the vehicle followed.
 
-Thus, as one could have expected from the beginning, the gathered information associates the **same data to all segments between two stops**. With the TPG API it is as far as one can go because we don't know what happens when the vehicle is between two stops. We just know that it reaches a stop.
+Thus, as one could have expected from the beginning, the gathered information associates the **same data to all segments between two stops**. Actually, the vehicle has a different speed on each segment (and even *along* the segment), but with the TPG API it is as far as one can go because it does not provide information between stops.
 
 I could have used this, the route between two stops, as the unit of the analysis. But I didn't because I have plans to add some private vehicle GPS tracks that could refine the data collected through the TPG API.
 
-Therefore, the unit of the analysis is the OSM segment. There will many segments where the data gathered is exactly the same but I ignored it, expecting one day to refine the data we get as input.
+Therefore, the unit of the analysis is the OSM segment. There will be many segments where the data gathered is exactly the same but I ignored this fact, expecting one day to refine the data the system gathers.
 
 ## Data preparation
 
@@ -94,11 +94,11 @@ The process to prepare the data involves:
 * Filtering out some obvious data errors.
 * Removing duplicates introduced in some early version of the data gathering process.
 * Calculating speed for each shift between stops.
-* Generating variables: workday in France, workday in Switzerland, day of week, etc.
+* Generating variables: holiday in France, holiday in Switzerland, day of week, etc.
 
 I use [R](https://www.r-project.org) for the statistics calculations and probably I could have managed to do the previous process with it. But I am not so proficient with its data structures and functions so I implemented it in Java. This is a tedious process and I think it is good to use a language you know well.
 
-At the end of this process I got a CSV file containing a row for each shift and for each shift a column for all the variables I wanted to consider. This I could easily consume from R. The list of variables included in the CSV are:
+At the end of this process I got a CSV file that R could easily consume. This file has a row for each time a vehicle drove through the segment, and for each row it has the following variables:
 
 * speed: speed between the two stops that contain this segment.
 * timestamp: when was the speed measured.
@@ -111,7 +111,7 @@ At the end of this process I got a CSV file containing a row for each shift and 
 * humidity: the last registered humidity.
 * pressure: the last registered pressure
 * temperature: the last registered temperature.
-* weather: A code indicating the type of weather (cloudy, sunny, rain, etc.) in the last weather measure.
+* weather: A code indicating the type of weather (cloudy, sunny, rain, etc.) last registered.
 
 I didn't mentioned before, but the gathering process also gathers data from the [OpenWeatherMap](http://openweathermap.org/) API each few hours.
 
@@ -121,7 +121,7 @@ In order to take a look at the data I chose a segment whose pattern I know well:
 
 ![](/assets/tpg/eda-path.png)
 
-Based on my experience, the pattern should be clear: on busy days it collapses in the mornings to go to work and the rest of the day is more or less free. Producing some charts more or less confirms this pattern.
+Based on my experience, the pattern should be clear: on busy days it collapses early in the morning and the rest of the day is more or less free. Producing some charts more or less confirms this pattern.
 
 First, the speed density plot shows two modes and is skewed to lower speeds.
 
@@ -149,7 +149,7 @@ The model I am using is wrong because I am using linear regression and speed is 
 
 	speed = minutesDay * weekday + weekday * weather
 
-A residual plot would show, as expected, that they are not normal:
+A residual Q-Q plot shows that they don't follow the normal distribution in the lower and higher quantiles:
 
 ![](/assets/tpg/residuals.png)
 
@@ -157,32 +157,32 @@ In the next iteration I should use some modeling technique that accommodates for
 
 ## Generating predictions
 
-In order to get a map with predicted speeds I had to automate two processes.
+In order to produce forecasts for a segment, it is necessary to generate a model for its data and then use it to obtain forecasts. These two steps are run for all the OSM segments as follows.
 
-The first one runs just once and would generate a model for each OSMSegment:
+To generate a model for each OSMSegment:
 
-1. For each OSM segment
-   1. Prepare the data for the segment
-   1. Make R build a model
-   1. Store the model in the *OSMSegment* table (we have a bytea field for this)
+	For each OSM segment
+	   Prepare the data for the segment (as seen above)
+	   Make R build a model
+	   Store the model in the *OSMSegment* table (there is a bytea field for this)
 
-The second one takes the models and generate the forecasts based on the values of the variables we know:
+Then, to generate the forecasts:
 
-1. For each OSM segment
-   1. Get its model from the database
-   1. Build a dataset with the variables we know: day of the week, weather, etc.
-   1. Ask R to provide a forecast with the retrieved model and the generated dataset
-   1. Store the forecast in the database
+	For each OSM segment
+	   Get its model from the database
+	   Build a dataset with the variables values: day of the week, weather, etc.
+	   Ask R to provide a forecast with the retrieved model and the generated dataset
+	   Store the forecast in the database
 
-Sounds simple but it wasn't. There were several things that made implementing these two processes complicated. The two main difficulties were:
+Sounds simple but it wasn't. There were several things that made implementing these two steps complicated. The two main difficulties were:
 
-* Model size. *lm* function in R, which generates a linear model, produces objects whose size is around 500kb. Multiply this by 4000 OSM segments and you get 2 Gigabytes.
+* Model size. R *lm* function, the function which generates a linear model, produces objects whose size is around 500kb. Multiply this by 4000 OSM segments and you get 2 Gigabytes.
 
-  But actually, in order to reuse the model I just need the coefficients that I multiply with the variable values to get the speed, so there had to be a way to keep the models much smaller.
+  But actually, in order to apply the model and produce a forecast, it is just necessary to multiply the variable coefficients by the variable values. I just need some numbers! So there had to be a way to keep the models well under 500Kb.
 
   And, indeed, [there is a way](https://www.r-bloggers.com/trimming-the-fat-from-glm-models-in-r/), with the only problem that it involves the *glm* function (instead of *lm*) and I had to adapt the R script. Finally I ended up with 15Kb models, which was much better.
 
-* R script. Both processes are executed from Java as new system processes. Initially I called the R script for each OSM segment. Launching 4000 processes is a bit slow so I changed the R script to deal with all the segments in one execution. This time, although it is still a lot of computation, the performance was enough to let the server run it each half an hour or so. Maybe using some R Java API like [rJava](https://www.rforge.net/rJava/) could improve performance even more.
+* R script. Both processes are executed from Java as new system processes. Initially I called the R script for each OSM segment. Launching 4000 processes is a bit slow so I changed the R script to deal with all the segments in one execution. This time, although it is still a lot of computation, the performance was enough to let the server calculate forecasts each half an hour or so. Maybe using some R Java API like [rJava](https://www.rforge.net/rJava/) could improve performance even more.
 
 ## Next steps
 
@@ -190,11 +190,11 @@ The process is working but it took so much effort to have the whole system runni
 
 * The first one is to improve modelling.
 
-  * As said before, linear modelling does not adapt to this problem. I have transformed the *minutesDay* variable to show some linearity with speed but this is a particular case for each segment and difficult to automatize it. So, I'll apply more advanced techniques.
+  * As said before, linear modelling does not adapt to this problem. I have transformed the *minutesDay* variable to show some linearity with speed but this is a particular case for each segment and difficult to automatize it. So, I'll apply more suitable techniques.
 
   * Now that I have a good understanding of the data it is a good opportunity to start digging into machine learning techniques and see how it compares to other more classical techniques.
 
-  * I will Investigate further thee relation between holidays and speed and include them in the model.
+  * I will investigate further thee relation between holidays and speed and include them in the model.
 
 * Next, I would like to validate the predictions. Currently, I do this by opening the map and turning from the latest measure to the first forecast to see that the map does not change much. It does not look bad but of course this is not a very strict evaluation method. I would like to analyze the deviations between forecast speeds and actually measured ones.
 
