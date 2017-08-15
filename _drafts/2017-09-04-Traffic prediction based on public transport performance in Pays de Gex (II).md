@@ -6,7 +6,7 @@ date: 2017-09-04
 
 In the [previous post]({{ site.baseurl }}{% post_url 2017-08-07-Traffic prediction based on public transport performance in Pays de Gex (I) %}) I set the context of a project to monitor and predict the state of the border passages between Pays de Gex and Geneva. You can see it online here: [http://fergonco.org/border-rampage/](http://fergonco.org/border-rampage/).
 
-As one can see in the next data flow diagram, the project basically consists on gathering data from TPG public transport APIs, modelling the data, producing forecasts and drawing all this in a map:
+As one can see in the next data flow diagram, the project basically consists on gathering data from Geneva public transport (TPG) APIs, modelling the data, producing forecasts and drawing all this in a map:
 
 ![](/assets/tpg/dfd0.png)
 
@@ -17,7 +17,7 @@ In this post I will describe the process of gathering the data (in red).
 As I said, Geneva public transport system, [TPG](http://tpg.ch/), offers a REST API that allows querying the arrival time from their vehicles to each stop. Basically I am using two calls: *GetAllNextDepartures* and *GetThermometer*. The first one returns all the departures that take place from a specific stop to a specific destination. For example, this call:
 
 	http://prod.ivtr-od.tpg.ch/v1/GetAllNextDepartures.xml?
-		key=&stopCode=VATH&lineCode=Y&destinationCode=FERNEY-VOLTAIRE
+		stopCode=VATH&lineCode=Y&destinationCode=FERNEY-VOLTAIRE
 
 will return all the departures of the line "Y" from Val-Thoiry (VATH) to Ferney-Voltaire:
 
@@ -39,8 +39,9 @@ will return all the departures of the line "Y" from Val-Thoiry (VATH) to Ferney-
 			 <waitingTime>&amp;gt;1h</waitingTime>
 			 <reliability>T</reliability>
 		  </departure>
-		  <departure>
 		  ...
+	    </departures>
+	</nextDepartures>
 
 The second call, *GetThermometer*, gives you the "thermometer" of one particular *departureCode*, which contains the expected arrival time of the vehicle to each stop (or the actual arrival time if the vehicle was already there):
 
@@ -88,13 +89,15 @@ The second call, *GetThermometer*, gives you the "thermometer" of one particular
 			 <visible>true</visible>
 		  </step>
 		  ...
+	   </steps>
+	</thermometer>
 
-In order to obtain the arrival time of the vehicles to the stops, a process is run that orchestrates these two calls this way:
+In order to obtain the arrival time of the vehicles to the stops, a process makes use of these calls in the following way:
 
-1. Before the first service starts, at 4am, *GetAllNextDepartures* is called for the starting stops of all the three lines being monitored. This yields all the services that we want to monitor during the day.
-1. For all services of the day, the process issues a call to *GetThermometer* and registers the expected arrival times of every vehicle to every stop.
-1. The process sleeps if no arrival is expected in the next five minutes. This happens only at the beginning and end of the day because during the day arrivals take place constantly. But it allows us to spare some calls to the API.
-1. The process queries the relevant *GetThermometer* and checks if the expected arrival time is *now*. When it is, we register the arrival of the vehicle and update the database.
+1. Before the first service starts, at 4am, the process calls *GetAllNextDepartures* for the starting stops of all the three lines being monitored and stores the codes from all vehicles servicing the lines.
+1. For all vehicles servicing a line, the process issues a call to *GetThermometer* and registers the expected arrival times to every stop.
+1. The process sleeps if no arrival is expected in the next five minutes. This happens only at the beginning and end of the day because during the day arrivals take place constantly. But it allows to spare some calls to the API.
+1. Few minutes before the next arrival is expected, the process wakes up and queries the relevant *GetThermometer* to check if the expected arrival time is *now*. When it is, the process registers the arrival of the vehicle and updates the database.
 1. Repeat from 3.
 
 ## Problems found
@@ -133,7 +136,7 @@ I wanted to draw the map based on the speed of the vehicles between stops. By qu
 
 Then I realized that the routes between some stops where wrong, and so where the speeds calculated between those stops. To correct the speeds I had to undo the speed calculation using the wrong route lengths, obtain the time between stops and calculate the speed again with the right route length. Very entertaining.
 
-Then I realized that there were speeds equal to 3402km/h !! What happened? Probably some wrong data coming from the API or detecting the vehicle arrival. But as the database contained the speed I cannot know easily.
+Then I realized that there were speeds equal to 3402km/h !! What happened? Probably some wrong data coming from the API or detecting the vehicle arrival. But, as I am processing the data before I save it on the database I cannot know the reason easily.
 
 The current database design does not store speeds anymore, just the time between stops. The speed is calculated later, when the data is processed for visualization or for analysis, where I can use the route lengths that I know are true at that moment.
 
@@ -149,7 +152,7 @@ The probability to get a failure in one call is 0.5. Two failures in a row 0.5*0
 
 	0.5^n = 0.001
 
-which we solve thus:
+which I solve thus:
 
 	log(0.5^n) = log(0.001)
 	n * log(0.5) = log(0.001)
