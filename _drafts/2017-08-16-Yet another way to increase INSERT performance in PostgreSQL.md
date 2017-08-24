@@ -4,17 +4,15 @@ title: 'Yet another way to increase INSERT performance in PostgreSQL'
 date: 2017-09-08
 ---
 
-In this post I will show a way to improve the performance doing many inserts on a PostgreSQL database. The results obtained in this post were using a PostgreSQL 9.3.14 instance running in a Docker container. The database had the PostGIS extension installed and the data to be inserted contained geometries. This is not relevant for the post, it is just the data I had at hand.
+In this post I will show yet another way to improve the performance when doing many inserts on a PostgreSQL database. The database server was a PostgreSQL 9.3.14 instance running in a Docker container with the PostGIS extension installed. The data used for the tests consists of around 330.000 records containing small geometries (lines of just two points). The particularity of using PostGIS geometries is not relevant for the tests, it is just the data and setup I had at hand.
 
-There are several methods to insert data in a PostgreSQL database efficiently. Tweaking Postgresql parameters can be effective if you know how (I don't). Removing indices before the insertion and building them again also helps. The same can be done with constraints, taking care that the data does not violate them! And the *COPY* statement is also a efficient way to do insertions.
+There are several methods to insert data in a PostgreSQL database efficiently. Tweaking Postgresql parameters can be effective if you know how (I don't). Removing indices before the insertion and building them again afterwards also helps. The same can be done with constraints, taking care that the data does not violate them! And the *COPY* statement is also an efficient way to do insertions.
 
-I discovered recently another method, which gives a significant speed up, and this post is about it.
-
-It takes advantage of the *INSERT* syntax that allows to insert several records in one single statement:
+I recently discovered another method that is similar to *COPY* in the sense that it just changes the syntax to insert the data, but that requires a very small syntactic change. It makes use of the *INSERT* syntax that allows to include several records in one single statement:
 
 	INSERT INTO <table> VALUES (record1), (record2), ..., (recordN);
 
-A test will load two files, each of them containing the same data, which consists of around 330.000 records. The first one, *manyinserts.sql* contains one insert per record and looks so:
+In order to get the speed up the test will compare the time taken to insert the data with this syntax with the time to insert the data using one *INSERT* per record. A test will load two files, each of them containing the same data, which consists of around 330.000 records. The first one, *manyinserts.sql* contains one insert per record and looks so:
 
 	BEGIN;
 	INSERT INTO mytable (millis,speed,predictionerror,geom) VALUES(1499326067094, 31.5639523033815,11.460813, ST_GeomFromText('LINESTRING (6.0641721 46.3374997, 6.0638603 46.3373874)', 4326));
