@@ -1,10 +1,10 @@
 ---
 layout: post
-title: 'Traffic prediction based on public transport performance in Pays de Gex (II): Data gathering'
-date: 2017-09-04
+title: 'Traffic prediction based on public transport transit times (II): Data gathering'
+date: 2017-09-06
 ---
 
-In the [previous post]({{ site.baseurl }}{% post_url 2017-08-07-Traffic prediction based on public transport transit times (I) %}) I set the context of a project to monitor and predict the state of the border passages between Pays de Gex and Geneva. You can see it online here: [http://fergonco.org/border-rampage/](http://fergonco.org/border-rampage/).
+In the [previous post]({{ site.baseurl }}{% post_url 2017-08-07-Traffic prediction based on public transport transit times (I) %}) I set the context of a project to monitor and predict the traffic over the border passages between Pays de Gex and Geneva. You can see it online here: [http://fergonco.org/border-rampage/](http://fergonco.org/border-rampage/).
 
 As one can see in the next data flow diagram, the project basically consists on gathering data from Geneva public transport (TPG) APIs, modelling the data, producing forecasts and drawing all this in a map:
 
@@ -94,7 +94,7 @@ The second call, *GetThermometer*, gives you the "thermometer" of one particular
 
 In order to obtain the arrival time of the vehicles to the stops, a process makes use of these calls in the following way:
 
-1. Before the first service starts, at 4am, the process calls *GetAllNextDepartures* for the starting stops of all the three lines being monitored and stores the codes from all vehicles servicing the lines.
+1. Before the first service starts, at 4am, the process calls *GetAllNextDepartures* for the starting stops of all the three lines being monitored and stores the codes from all vehicles servicing the lines during that day.
 1. For all vehicles servicing a line, the process issues a call to *GetThermometer* and registers the expected arrival times to every stop.
 1. The process sleeps if no arrival is expected in the next five minutes. This happens only at the beginning and end of the day because during the day arrivals take place constantly. But it allows to spare some calls to the API.
 1. Few minutes before the next arrival is expected, the process wakes up and queries the relevant *GetThermometer* to check if the expected arrival time is *now*. When it is, the process registers the arrival of the vehicle and updates the database.
@@ -124,7 +124,7 @@ On the second one I just forgot the debug logs on, which are very verbose each t
 
 ### Evolving database design
 
-As said previously, the first design of the database was done without care. It was a first draft in a project that I thought was not going very far. At the end it did and was a huge mistake not to fix the database design at the earliest.
+As said previously, the first design of the database was done without care. It was a first draft in a project that I thought was not going very far. At the end it did. And it was a huge mistake not to fix the database design at the earliest.
 
 There were more than eight million records with redundant information. Due to the full disk episodes they were spread in three database backups, some of them overlapping.
 
@@ -136,9 +136,9 @@ I wanted to draw the map based on the speed of the vehicles between stops. By qu
 
 Then I realized that the routes between some stops where wrong, and so where the speeds calculated between those stops. To correct the speeds I had to undo the speed calculation using the wrong route lengths, obtain the time between stops and calculate the speed again with the right route length. Very entertaining.
 
-Then I realized that there were speeds equal to 3402km/h !! What happened? Probably some wrong data coming from the API or detecting the vehicle arrival. But, as I am processing the data before I save it on the database I cannot know the reason easily.
+Then I realized that there were speeds equal to 3402km/h !! What happened? Probably some wrong data coming from the API or detecting the vehicle arrival. But, as I am processing the data before I save it on the database I cannot easily know the reason.
 
-The current database design does not store speeds anymore, just the time between stops. The speed is calculated later, when the data is processed for visualization or for analysis, where I can use the route lengths that I know are true at that moment.
+The current database design does not store speeds anymore, just the time between stops. The speed is calculated later, when the data is processed for visualization or for analysis, where I can use the route lengths that I know are true at the moment.
 
 ### TPG API fails
 

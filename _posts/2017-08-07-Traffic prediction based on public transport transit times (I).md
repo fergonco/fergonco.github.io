@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 'Traffic prediction based on public transport performance in Pays de Gex (I)'
+title: 'Traffic prediction based on public transport transit times (I)'
 date: 2017-08-07
 ---
 

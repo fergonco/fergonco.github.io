@@ -1,12 +1,12 @@
 ---
 layout: post
-title: 'Traffic prediction based on public transport performance in Pays de Gex (III): Data analysis and prediction'
+title: 'Traffic prediction based on public transport transit times (III): Data analysis and prediction'
 date: 2017-09-11
 ---
 
 This is the third part of the series on the project about traffic prediction. You can see it online here: [http://fergonco.org/border-rampage/](http://fergonco.org/border-rampage/).
 
-In the [previous post]({{ site.baseurl }}{% post_url 2017-09-04-Traffic prediction based on public transport performance in Pays de Gex (II) %}) I introduced the process gathering data from Geneva public transport (TPG) API. 
+In the [previous post]({{ site.baseurl }}{% post_url 2017-09-06-Traffic prediction based on public transport transit times (II) %}) I introduced the process gathering data from Geneva public transport (TPG) API. 
 
 In this one I will show the process of analyzing the data and generating predictions, in blue on the following diagram.
 

@@ -1,12 +1,12 @@
 ---
 layout: post
-title: 'Traffic prediction based on public transport performance in Pays de Gex (IV): Visualization'
+title: 'Traffic prediction based on public transport transit times (IV): Visualization'
 date: 2017-09-18
 ---
 
 Yet another entry on the project about traffic prediction (online here: [http://fergonco.org/border-rampage/](http://fergonco.org/border-rampage/)).
 
-In the [previous post]({{ site.baseurl }}{% post_url 2017-09-11-Traffic prediction based on public transport performance in Pays de Gex (III) %}) I showed how the data was analyzed and the forecasts produced. In this one I will show how the map shows all this information. This is the last of the three processes of the data flow diagram, the one in green:
+In the [previous post]({{ site.baseurl }}{% post_url 2017-09-11-Traffic prediction based on public transport transit times (III) %}) I showed how the data was analyzed and the forecasts produced. In this one I will show how the map shows all this information. This is the last of the three processes of the data flow diagram, the one in green:
 
 ![](/assets/tpg/dfd0.png)
 
