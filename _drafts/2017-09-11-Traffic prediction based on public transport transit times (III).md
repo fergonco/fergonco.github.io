@@ -8,7 +8,7 @@ This is the third part of the series on the project about traffic prediction. Yo
 
 In the [previous post]({{ site.baseurl }}{% post_url 2017-09-06-Traffic prediction based on public transport transit times (II) %}) I introduced the process gathering data from Geneva public transport (TPG) API. 
 
-In this one I will show the process of analyzing the data and generating predictions, in blue on the following diagram.
+In this one I will show the process of analyzing the data and generating predictions, in blue in the following diagram.
 
 ![](/assets/tpg/dfd0.png)
 
@@ -16,11 +16,11 @@ In this one I will show the process of analyzing the data and generating predict
 
 Before analyzing the data I'll explain how the database is organized: how the public transport network data is stored in the database and how the gathered real time data references this network.
 
-All the network data is provided by [OpenStreetMap](http://openstreetmap.org/). The Overpass API allows to download an XML file containing the nodes and paths that form the road network in a specific area:
+All the network data is taken from [OpenStreetMap](http://openstreetmap.org/). The Overpass API allows to download an XML file containing the nodes and paths that form the road network in a specific area:
 
 	wget 'http://overpass-api.de/api/map?bbox=5.9627,46.2145,6.1287,46.2782' -O network.osm.xml
 
-OpenStreetMap not only has the information about the roads but it also has the routes that the TPG services follow. A program takes this information and some metadata about the public transport lines and produces the following three tables:
+OpenStreetMap not only has the information about the roads but it also has the routes that the TPG services follow. I set up a program that takes this information and some metadata about the public transport lines and produces the following three tables:
 
 * The first one, *OSMSegment*, contains all the segments that form the TPG service routes:
 
@@ -64,7 +64,7 @@ You can see the many-to-many relationship in the following diagram:
 
 ## Gathered data and the unit of analysis
 
-Having all the routes between two stops in the *TPGStopRoute* table, the data gathering process just fills a table with a foreign key to it. This table is called *Shift* and it contains data like this:
+The data gathering process detects vehicles moving from one stop to another and fills a table called *Shift* with the data about the move and a foreign key to the route the vehicle followed, in the *TPGStopRoute* table. The *Shift* table looks like this:
 
 	   id   | seconds |  sourceshiftid  |   timestamp   | vehicleid | route_id 
 	--------+---------+-----------------+---------------+-----------+----------
@@ -79,9 +79,9 @@ Having all the routes between two stops in the *TPGStopRoute* table, the data ga
 	 188474 |      80 | 1-4-2017+185086 | 1493643011000 | 185086    |      104
 	 188466 |      39 | 1-4-2017+185015 | 1493642567000 | 185015    |       72
 
-Each entry represents a vehicle arriving to a stop and it contains the *timestamp* when it happened, the number of *seconds* elapsed since the previous stop and the *route_id*, which points to the *TPGStopRoute* and provides information about the exact route the vehicle followed.
+Each entry represents a vehicle arriving to a stop and it contains: the *timestamp* when it happened, the number of *seconds* elapsed since the previous stop and the *route_id*, which points to the *TPGStopRoute* and provides information about the exact route the vehicle followed.
 
-Thus, as one could have expected from the beginning, the gathered information associates the **same data to all segments between two stops**. Actually, the vehicle has a different speed on each segment (and even *along* the segment), but with the TPG API it is as far as one can go because it does not provide information between stops.
+Thus, the gathered information associates the **same speed to all segments between two stops**. Actually, the vehicle has a different speed on each segment (and even *along* the segment), but with the TPG API it is as far as one can go because it does not provide information between stops.
 
 I could have used this, the route between two stops, as the unit of the analysis. But I didn't because I have plans to add some private vehicle GPS tracks that could refine the data collected through the TPG API.
 
@@ -123,17 +123,17 @@ In order to take a look at the data I chose a segment whose pattern I know well:
 
 Based on my experience, the pattern should be clear: on busy days it collapses early in the morning and the rest of the day is more or less free. Producing some charts more or less confirms this pattern.
 
-First, the speed density plot shows two modes and is skewed to lower speeds.
+First, the speed histogram shows two modes and a skew to higher speeds.
 
 ![](/assets/tpg/density.png)
 
-I already expected the skew, due to the traffic jams in the morning, but the two modes were a bit surprising. A look to the density plot per day sheds some light:
+I already expected the lower mode, due to the traffic jams in the morning, but the skew to high speeds was a bit surprising. A look to the histogram per day sheds some light:
 
 ![](/assets/tpg/density-per-day.png)
 
-To no one surprise, the speeds Saturdays and Sundays are, in general, higher and this is producing the second mode.
+To no one surprise, the speeds Saturdays and Sundays are, in general, higher and this is producing the skew.
 
-Another variable that could have some relation was the weather. I grouped cloudy and sunny weather together because I don't think it has an effect and left all the other weather conditions. I started to gather data at the end of the winter, so there is few data about adverse weather conditions. With a bit of imagination one could see bigger skew by rain or slower speeds by mist, fog and drizzle. But definitely there is not enough data.
+Another variable that could have some relation was the weather. I grouped cloudy and sunny weather together because I don't think it has an effect and left all the other weather conditions. I started to gather data at the end of the winter, so there is few data about adverse weather conditions. With a bit of imagination one could see bigger lower mode by rain or slower speeds by mist, fog and drizzle. But definitely there is not enough data.
 
 ![](/assets/tpg/histograms-per-weather.png)
 
@@ -141,23 +141,50 @@ And of course, the time of the day is relevant. The next plot shows how the spee
 
 ![](/assets/tpg/minutesday.png)
 
-Surprisingly, other variables didn't correlate with *speed*, like school holidays. Probably it is the case early in the year, when the weather is not so good, but now, specially during the summer, it has a strong influence. On the next iteration I should try to include some of these variables in the model.
+Surprisingly, the binary variable indicating if it is a school day in France or in the Geneva canton didn't correlate as strongly as my experience says (a lot!). This may be due to the fact that it has an impact on a small part of the measurements of the day. Or to the fact that the beginning of the summer contains a lot of observations with *schoolfr* to false but traffic jams where common. Probably a cleverer variable can be generated.
+
+![](/assets/tpg/schoolfr-boxplot.png)
 
 ## Model
 
-The model I am using is wrong because I am using linear regression and speed is not a linear combination of the time of the day. But there were other aspects of the project that require my time, like data gathering, or visualization) and I decided to go for *anything*. And *anything* was a linear model with this equation (R notation, * means interactions between the variables):
+As a newbie statistician, the selection of a model is one of the hardest parts. This is an ongoing process that I will improve as I learn new methods.
 
-	speed = minutesDay * weekday + weekday * weather
+The first model I fitted was a linear regression. As we saw, the relation between speed and time of the day is not linear, so a linear regression would look like this:
 
-A residual Q-Q plot shows that they don't follow the normal distribution in the lower and higher quantiles:
+![](/assets/tpg/linear-regression-fit.png)
 
-![](/assets/tpg/residuals.png)
+and would predict higher speeds on the rush hour between 7am and 10am and lower speeds immediately afterwards. The residual vs fitted plot shows it: when low speeds are predicted the residual (*\|y - ŷ\|*) is clearly negative (the prediction is bigger than the real value) and just afterwards the residual becomes positive (the prediction is smaller):
 
-In the next iteration I should use some modeling technique that accommodates for the non linear relation between *minutesDay* and speed.
+![](/assets/tpg/linear-regression-residual.png) 
+
+There are many methods beyond linear regression. Given that the data follows a similar pattern everyday, I would like to give K Nearest Neighbours Regression a try (basically get the mean of the K most similar points). And given that my data has a temporal structure, probably I should use some approach for seasonal time series. But so far I have just fitted a polynomial regression.
+
+In order to select the model I had to select the variables that were interesting, as well as the degree of the polynomial for *minutesDay*. Based on the plots shown before I considered these formulas:
+
+* speed ~ poly(minutesDay, i)
+* speed ~ weekday + schoolfr + poly(minutesDay, i)
+* speed ~ weekday + holidaySizefr + poly(minutesDay, i)
+* speed ~ weekday + poly(minutesDay, i)
+* speed ~ schoolfr * minutesDay + schoolfr + poly(minutesDay, i)
+* speed ~ weekday * minutesDay + schoolfr * minutesDay + weekday + schoolfr + poly(minutesDay, i)
+
+where a ~ b + c + b*c means "a as a function of b, c and the interactions between them" and *i* is the degree of the polynomial from 1 to around 20.
+
+I performed a cross validation on the different models splitting the data in months, as explained in [this stackexchange post](https://stats.stackexchange.com/questions/14099/using-k-fold-cross-validation-for-time-series-model-selection) and I obtained the following estimates for test Mean Squared Error (MSE, an indicator of how good would the model perform on new data):
+
+![](/assets/tpg/cross-validation-plot.png)
+
+All formulas produce a better estimate as the polynomial degree increases but slowly the increase gets smaller and becomes eventually zero. Theoretically it should start increasing at some point, where the high degree polynomial starts to fit *too* well the training data and perform poorly on the new data. Maybe testing with more degrees would show the U-shape but there is not enough data to do it.
+
+The point on each line shows the model selected by the *one-standard-error* rule: the simplest model for which the estimated test MSE is within one standard error of the lowest point in the curve. Thus, the model with the best cross validation MSE estimate is the one involving *weekday*, *schoolfr* and *minutesDay* with a 13 degree polynomial.
+
+An analysis of the residuals shows that this time they are more centered around zero, although they still do not follow a normal distribution.
+
+![](/assets/tpg/polynomial-regression-residual.png) | ![](/assets/tpg/linear-regression-residual.png) 
 
 ## Generating predictions
 
-In order to produce forecasts for a segment, it is necessary to generate a model for its data and then use it to obtain forecasts. These two steps are run for all the OSM segments as follows.
+In order to produce forecasts for a segment, it is necessary to generate the model for its data and then use it to obtain forecasts. These two steps are run for all the OSM segments as follows.
 
 To generate a model for each OSMSegment:
 
@@ -186,19 +213,15 @@ Sounds simple but it wasn't. There were several things that made implementing th
 
 ## Next steps
 
-The process is working but it took so much effort to have the whole system running that I finished the bare minimum and there are many things I can do to improve it.
+As explained on the point about the model, it is a work in progress so the obvious next step is to improve the model. 
 
-* The first one is to improve modelling.
+I would like to give a quick try to K Nearest Neighbours regression. In my experience, days follow very clear patterns and it seems to me that even picking the speed of the most similar observation (K=1) could yield good results.
 
-  * As said before, linear modelling does not adapt to this problem. I have transformed the *minutesDay* variable to show some linearity with speed but this is a particular case for each segment and difficult to automatize it. So, I'll apply more suitable techniques.
+I could also explore the temporal structure my data has. It comes to my mind that I could add the speed of the same day and same hour from last week as a predictor variable (autoregression) and there are time series based techniques that could be applied.
 
-  * Now that I have a good understanding of the data it is a good opportunity to start digging into machine learning techniques and see how it compares to other more classical techniques.
+I would also like to evaluate the predictions. Currently, I do this by opening the map and changing from the latest measure to the first forecast to see that the map does not change much. It does not look bad but of course this is not a very strict evaluation method. I would like to analyze the deviations between forecast speeds and actually measured ones.
 
-  * I will investigate further thee relation between holidays and speed and include them in the model.
-
-* Next, I would like to validate the predictions. Currently, I do this by opening the map and turning from the latest measure to the first forecast to see that the map does not change much. It does not look bad but of course this is not a very strict evaluation method. I would like to analyze the deviations between forecast speeds and actually measured ones.
-
-* And finally, and quite far in the future, I would like to include GPS tracks to have a finer map. Maybe find relations between public transport and private GPS tracks and extend the map to areas not covered by public transport.
+And finally, and quite far in the future, I would like to include GPS tracks to have a finer map. Maybe find relations between public transport and private GPS tracks and extend the map to areas not covered by public transport.
 
 ## Lessons learned
 
