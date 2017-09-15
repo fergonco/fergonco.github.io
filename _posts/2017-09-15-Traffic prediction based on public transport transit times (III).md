@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'Traffic prediction based on public transport transit times (III): Data analysis and prediction'
-date: 2017-09-11
+date: 2017-09-15
 ---
 
 This is the third part of the series on the project about traffic prediction. You can see it online here: [http://fergonco.org/border-rampage/](http://fergonco.org/border-rampage/).
