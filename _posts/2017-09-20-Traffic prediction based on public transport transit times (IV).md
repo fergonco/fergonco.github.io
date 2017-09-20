@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'Traffic prediction based on public transport transit times (IV): Visualization'
-date: 2017-09-18
+date: 2017-09-20
 ---
 
 Yet another entry on the project about traffic prediction (online here: [http://fergonco.org/border-rampage/](http://fergonco.org/border-rampage/)).
@@ -18,7 +18,7 @@ In order to draw gathered and forecast data they have to be unified in a single 
 
 ## Transforming gathered data
 
-In order to show how the data is transformed I will first describe (again if you read the previous posts) how the data is stored in the database. Then I will show how the data should be so that *GeoServer* is able to consume it.
+In order to show how the data is transformed I will first describe (again, if you have read the previous posts) how the data is stored in the database. Then I will show how the data should be so that *GeoServer* is able to consume it.
 
 ### Database model
 
@@ -60,15 +60,15 @@ Summarizing: *Shift*s reference *TPGStopRoute*s, which reference *OSMSegment*s.
 
 Now, how should the data be in order to be drawn from *GeoServer*?
 
-### GeoServer temporal layers
+### GeoServer temporal dimension
 
-The aim is to have a map showing segments of the public transport network painted with a color depending on the speed of the last vehicle passage. And this for several time coordinates (instants) that the user can select. In order to fulfill these requirements, *GeoServer* needs a dataset with the following fields:
+The aim is to have a map showing segments of the public transport network painted with a color depending on the speed of the last vehicle passage. And this for several time coordinates (instants) that the user can select on the web application. In order to fulfill these requirements, *GeoServer* needs a dataset with the following fields:
 
 * A geometry field with the geometry to draw, in this case a segment of the public transport network.
-* A speed field with the speed of the bus through the segment.
+* A speed field with the speed of the bus through the segment, in order to choose the corresponding color.
 * A timestamp field with the exact timestamp when this record exists (*GeoServer* offers other possibilities but this one is the one I used).
 
-*GeoServer* uses the last one to filter the dataset and get only the features that exist on the currently selected time coordinate. This means that, for every time coordinate that the user can select, there must be a subset of the dataset whose *timestamp* field is equal to this time coordinate. This subset will contain the data necessary to draw the map in the selected time coordinate.
+*GeoServer* uses the last field to filter the dataset and get only the features that exist on the selected time coordinate. This means that, for every time coordinate that the user can select, there must be a subset of the dataset whose *timestamp* field is equal to this time coordinate. This subset will contain the data necessary to draw the map in the selected time coordinate.
 
 Thus, if a segment has the same speed in two consecutive time coordinates, there will be two records that are identical except for the *timestamp* field. Seen from another perspective: the dataset must contain the data for the maps at every possible time coordinate, and will have a *timestamp* field that allows *GeoServer* to filter out the data that is not relevant for the time coordinate selected by the user.
 
@@ -78,9 +78,9 @@ I had to make some critical decisions here: what are the time coordinates I want
 
 I have shown how the database is organized and how the data must be in order to be consumed by *GeoServer*. Now I will explain how the transformation was done by means of SQL views.
 
-A first view joins *Shift*, *TPGStopRoute* and *OSMSegment* in order assign the segments to the shifts. This yields a result where each Shift is replicated as many times as there are segments in the associated *TPGStopRoute*, each of this replicas having a different segment geometry. I called this a *GeoShift*.
+A first view joins *Shift*, *TPGStopRoute* and *OSMSegment* in order to get speeds and geometries on the same table. This yields a result where each Shift is replicated as many times as there are segments in the associated *TPGStopRoute*, each of this replicas having a different segment geometry. I called this a *GeoShift*.
 
-Then, another view has the timestamps that correspond to "the last 24 hours each quarter of hour" at the moment of refreshing it.
+Then, another view has the timestamps that correspond to "the last 24 hours each quarter of hour" whenever it is computed.
 
 These two views are joined producing a result that for each timestamp there is a record for each segment having: the timestamp, the segment geometry and the most recent *Shift* speed before the timestamp. The result of this join can be used by GeoServer as it contains the segment geometry, the speed and the timestamp to filter the table.
 
@@ -88,7 +88,7 @@ Note that the timestamps view would run outdated as times goes by so there is a 
 
 This implementation faces some performance limitations:
 
-* The final result contains a record for each segment and for each timestamp. In the reduced area the project focuses on there are 4000 segments. On the other side, "the last 24 hours each quarter of hour" produces 96 timestamps. The result for this limited area and time dimension is 384000 records. It is not a big deal to serve a map with this amount of data but one can easily see that it does not escalate. Specially, focusing on bigger area would increase quadratically the number of segments.
+* The final result contains a record for each segment and for each timestamp. In the reduced area the project focuses on there are 4000 segments. On the other side, "the last 24 hours each quarter of hour" produces 96 timestamps. The result for this limited area and time dimension is 384000 records. It is not a big deal to serve a map with this amount of data but one can easily see that it does not escalate. Specially, as we deal with bi-dimensional data, focusing on bigger area would increase quadratically the number of segments.
 
 * Without going into the query details, joining the timestamps views and the *Shift*s involves a subquery, which is quite inefficient. After installing all the indexes and being sure PostgreSQL uses them, the whole process takes between 1 and 2 minutes. Probably the "views" approach is wrong in itself and an incremental solution that updates the drawing dataset each time new data is gathered would be much lighter computationally.
 
@@ -101,7 +101,7 @@ The table where forecasts are stored has already the structure required by *GeoS
 The process of populating the forecast table is like this:
 
 * For each segment.
-  * Get the statistical model from the database.
+  * Get the statistical model from the database (this is dealt with in detail in the [previous post]({{ site.baseurl }}{% post_url 2017-09-15-Traffic prediction based on public transport transit times (III) %})).
   * For each quarter of hour in the next 24 hours.
     * Gather variable values: weather, holidays, day of the week, timestamp, ...
     * Make a forecast using the segment model.
