@@ -145,7 +145,17 @@ This result can be loaded in *GeoServer*. The only two special configurations it
 	</Rule>
 ```
 
-  Note the use of *PerpendicularOffset* to symbolize the line on one side of the geometry, allowing thus to differentiate both segment directions.
+Note the use of *PerpendicularOffset* to symbolize the line on one side of the geometry, allowing thus to differentiate both segment directions.
+
+UPDATE:
+
+... and here you have an image of the result.
+
+![](/assets/tpg/visualization.png)
+
+
+
+
 
 
 
