@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'Regular expressions: non-capturing groups'
-date: 2017-09-15
+date: 2017-10-05
 ---
 
 If you never studied thoroughly regular expressions but, like me, learned it bit by bit as you needed it, you may not know *non-capturing groups*. This feature may be useful at least when some quantifier (?, \*, ...) applies to a subset of the expression but you don't want this subset to be captured. Let's develop this. Consider a process producing this output:
@@ -52,7 +52,7 @@ If we want to get the numbers we need to capture them. And this is done in the r
 	|  capture one or more digits
 	Open parenthesis
 
-The Javascript code has to change as well in order to retrieve the two captured groups:
+The Javascript code has to change as well in order to retrieve the two captured groups. Instead of testing the regular expression it obtains a *match* array with the captured groups:
 
 	var data = [
 		"(2, 5)",
@@ -77,20 +77,16 @@ Now consider that numbers have an optional decimal part, like 4.124. The process
 	(5.31, 12)
 	(14, 43.12)
 
-The regular expression has to deal now with cases where the *dot* **and** one or more digits appear. Somewhat it has to check that either the *dot* (\\.) and one or more digits (\d+) appear, or none of them appear. In order to treat *\\.\d+* as a whole and be made optional it is possible to wrap the expression between parentheses and add the optional quantifier thus: *(\\.\d+)?*. The code would look like this:
+The regular expression has to deal now with cases where the *dot* **and** one or more digits appear. Somewhat it has to check that either the *dot* (\\.) and one or more digits (\d+) appear, or none of them do. In order to treat *\\.\d+* as a whole and be made optional it is possible to wrap the expression between parentheses and add the optional quantifier thus: *(\\.\d+)?*. Instead of:
 
-	var data = [
-		"(2, 5)",
-		"(5.31, 12)",
-		"(14, 43.12)"
-	];
+    var regexp = /\((\d+),\s*(\d+)\)/;
+
+The regular expression should be (differences underlined):
+
 	var regexp = /\((\d+(\.\d+)?),\s*(\d+(\.\d+)?)\)/;
-	data.forEach(function (line) { 
-		var match = regexp.exec(line);
-		console.log(line + " -> " + match[1] + "," + match[2]);
-	});
+                        ________         ________
 
-But this syntax is the one of capturing groups and it would add new groups to the result. The output of the script would show clearly that the parentheses used for the optional decimal part are creating new capturing groups and messing with what the code expects (two capturing groups, one for each number):
+But this syntax, putting things between parentheses, is the one of capturing groups and it would add new groups to the result. The output of the script would show clearly that the parentheses used for the optional decimal part are creating new capturing groups and messing with what the code expects (two capturing groups, one for each number):
 
 	(2, 5) -> 2,undefined
 	(5.31, 12) -> 5.31,.31
