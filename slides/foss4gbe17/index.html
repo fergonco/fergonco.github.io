@@ -1,0 +1,392 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Real time tracking and prediction of public transport transit speed in Pays de Gex</title>
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/simple.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+                    <p>Fernando González Cortés</p>
+                    <p>fernando.gonzalez@geomati.co</p>
+                    <p><a href="http://fergonco.org/">http://fergonco.org/</a> | <a href="http://geomati.co/">http://geomati.co/</a></p>
+                    <p><img style="border:none; box-shadow:none" src="images/logo_geomatico_big.png" class="stretch"></p>
+				</section>
+				<section data-markdown>
+					## Real time tracking and prediction of public transport transit speed in Pays de Gex
+				</section>
+				<section>
+					<img class="stretch" src="images/map.png">
+				</section>
+				<!--section>
+					<img class="stretch" src="images/border.jpg">
+				</section>
+				<section>
+					<img class="stretch" src="images/tpg-planner.png">
+				</section-->
+				<section>
+					<img style="border:none; box-shadow:none" class="stretch" src="images/dfd.png">
+				</section>
+				<section>
+					<img style="border:none; box-shadow:none" class="stretch" src="images/dfd1.png">
+				</section>
+				<section>
+					<h3>4am: /GetAllNextDepartures.xml</h3>
+                    <pre style="font-size:14px;word-wrap: normal;white-space: pre;"><span class="AttributeValue"></span><span class="AttributeValue">
+                        &lt;?xml version=<span class="AttributeName">"1.0"</span> encoding=<span class="AttributeName">"UTF-8"</span>?&gt;</span><span class="AttributeValue">
+                        &lt;nextDepartures&gt;</span><span class="AttributeValue">
+                            &lt;timestamp&gt;2017-10-20T04:12:09+0200</span><span class="AttributeValue">&lt;/timestamp&gt;</span><span class="AttributeValue">
+                            &lt;stop&gt;</span><span class="AttributeValue">
+                                &lt;stopCode&gt;VATH</span><span class="AttributeValue">&lt;/stopCode&gt;</span><span class="AttributeValue">
+                                &lt;stopName&gt;Val-Thoiry</span><span class="AttributeValue">&lt;/stopName&gt;</span><span class="AttributeValue">
+                            &lt;/stop&gt;</span><span class="AttributeValue">
+                            &lt;departures&gt;</span><span class="AttributeValue">
+                                &lt;departure&gt;</span><span class="AttributeValue">
+                                    &lt;departureCode&gt;</span><span style="color:red">216940</span><span class="AttributeValue">&lt;/departureCode&gt;</span><span class="AttributeValue">
+                                    &lt;timestamp&gt;</span><span style="color:red">2017-10-20T06:30:09+0200</span><span class="AttributeValue">&lt;/timestamp&gt;</span><span class="AttributeValue">
+                                    &lt;reliability&gt;T</span><span class="AttributeValue">&lt;/reliability&gt;</span><span class="AttributeValue">
+                                &lt;/departure&gt;</span><span class="AttributeValue">
+                                &lt;departure&gt;</span><span class="AttributeValue">
+                                    &lt;departureCode&gt;</span><span style="color:red">216806</span><span class="AttributeValue">&lt;/departureCode&gt;</span><span class="AttributeValue">
+                                    &lt;timestamp&gt;</span><span style="color:red">2017-10-20T06:50:09+0200</span><span class="AttributeValue">&lt;/timestamp&gt;</span><span class="AttributeValue">
+                                    &lt;reliability&gt;F</span><span class="AttributeValue">&lt;/reliability&gt;</span><span class="AttributeValue">
+                                &lt;/departure&gt;</span><span class="AttributeValue">
+                                &lt;departure&gt;</span><span class="AttributeValue">
+                                    &lt;departureCode&gt;</span><span style="color:red">217160</span><span class="AttributeValue">&lt;/departureCode&gt;</span><span class="AttributeValue">
+                                    &lt;timestamp&gt;</span><span style="color:red">2017-10-20T07:10:09+0200</span><span class="AttributeValue">&lt;/timestamp&gt;</span><span class="AttributeValue">
+                                    &lt;reliability&gt;T</span><span class="AttributeValue">&lt;/reliability&gt;</span><span class="AttributeValue">
+                                &lt;/departure&gt;</span><span class="AttributeValue">
+                            &lt;/departures&gt;</span><span class="AttributeValue">
+                        &lt;/nextDepartures&gt;</span>
+                    </pre>
+                </section>
+				<section>
+                    <h3>6.30am: /GetThermometer.xml</h3>
+                    <pre style="font-size:14px; word-wrap: normal;white-space: pre;"><span class="AttributeValue"></span><span class="AttributeName">
+                        &lt;?xml version=<span class="AttributeName">"1.0"</span> encoding=<span class="AttributeName">"UTF-8"</span> standalone=<span class="AttributeName">"yes"</span>?&gt;</span><span class="AttributeValue">
+                        &lt;thermometer&gt;</span><span class="AttributeValue">
+                            &lt;timestamp&gt;2017-10-20T04:12:21+0200</span><span class="AttributeValue">&lt;/timestamp&gt;</span><span class="AttributeValue">
+                            &lt;stop&gt;</span><span class="AttributeValue">
+                                &lt;stopCode&gt;VATH</span><span class="AttributeValue">&lt;/stopCode&gt;</span><span class="AttributeValue">
+                                &lt;stopName&gt;Val-Thoiry</span><span class="AttributeValue">&lt;/stopName&gt;</span><span class="AttributeValue">
+                        </span><span class="AttributeValue">    &lt;/stop&gt;</span><span class="AttributeValue">
+                            &lt;lineCode&gt;Y</span><span class="AttributeValue">&lt;/lineCode&gt;</span><span class="AttributeValue">
+                            &lt;destinationName&gt;Ferney-Voltaire</span><span class="AttributeValue">&lt;/destinationName&gt;</span><span class="AttributeValue">
+                            &lt;destinationCode&gt;FERNEY-VOLTAIRE</span><span class="AttributeValue">&lt;/destinationCode&gt;</span><span class="AttributeValue">
+                            &lt;steps&gt;</span><span class="AttributeValue">
+                                &lt;step&gt;</span><span class="AttributeValue">
+                                    &lt;departureCode&gt;</span><span style="color:red">216940</span><span class="AttributeValue">&lt;/departureCode&gt;</span><span class="AttributeValue">
+                                    &lt;timestamp&gt;</span><span style="color:red">2017-10-20T06:30:00+0200</span><span class="AttributeValue">&lt;/timestamp&gt;</span><span class="AttributeValue">
+                                    &lt;stop&gt;</span><span class="AttributeValue">
+                                        &lt;stopCode&gt;VATH</span><span class="AttributeValue">&lt;/stopCode&gt;</span><span class="AttributeValue">
+                                        &lt;stopName&gt;Val-Thoiry</span><span class="AttributeValue">&lt;/stopName&gt;</span><span class="AttributeValue">
+                        </span><span class="AttributeValue">            &lt;/stop&gt;</span><span class="AttributeValue">
+                        </span><span class="AttributeValue">        &lt;/step&gt;</span><span class="AttributeValue">
+                                &lt;step&gt;</span><span class="AttributeValue">
+                                    &lt;departureCode&gt;</span><span style="color:red">216941</span><span class="AttributeValue">&lt;/departureCode&gt;</span><span class="AttributeValue">
+                                    &lt;timestamp&gt;</span><span style="color:red">2017-10-20T06:32:56+0200</span><span class="AttributeValue">&lt;/timestamp&gt;</span><span class="AttributeValue">
+                                    &lt;stop&gt;</span><span class="AttributeValue">
+                                        &lt;stopCode&gt;THGA</span><span class="AttributeValue">&lt;/stopCode&gt;</span><span class="AttributeValue">
+                                        &lt;stopName&gt;Thoiry-Gare</span><span class="AttributeValue">&lt;/stopName&gt;</span><span class="AttributeValue">
+                        </span><span class="AttributeValue">            &lt;/stop&gt;</span><span class="AttributeValue">
+                        </span><span class="AttributeValue">        &lt;/step&gt;</span><span class="AttributeValue">
+                                &lt;step&gt;</span><span class="AttributeValue">
+                                    &lt;departureCode&gt;</span><span style="color:red">216942</span><span class="AttributeValue">&lt;/departureCode&gt;</span><span class="AttributeValue">
+                                    &lt;timestamp&gt;</span><span style="color:red">2017-10-20T06:34:20+0200</span><span class="AttributeValue">&lt;/timestamp&gt;</span><span class="AttributeValue">
+                                    &lt;stop&gt;</span>
+                                    ...</span>
+                    </pre>
+                </section>
+				<section>
+                    <h2>Store event in Shift table:</h2>
+                    <p>
+                        <img class="noborder" src="images/table_shift.png">
+                    </p>
+				</section>
+                <!--
+				<section>
+                    <h2>Store event in Shift table:</h2>
+                    <p>
+                    <pre>
+   id   | seconds |   timestamp   | route_id 
+--------+---------+---------------+----------
+ 188508 |      77 | 1493643974000 |      103
+ 188509 |     144 | 1493644119000 |      105
+ 188510 |     112 | 1493644231000 |      107
+ 188470 |     138 | 1493642592000 |      112
+ 188471 |     144 | 1493642735000 |      110
+ 188472 |      75 | 1493642811000 |      108
+ 188473 |     119 | 1493642931000 |      106
+ 188477 |      93 | 1493643128000 |      125
+ 188474 |      80 | 1493643011000 |      104
+ 188466 |      39 | 1493642567000 |       72
+                    </pre>
+                    </p>
+				</section>
+                -->
+				<section>
+                    <h2>TPGStopRoute:</h2>
+                    <p>
+                        <img class="noborder" src="images/table_route.png">
+                    </p>
+				</section>
+                <!--
+				<section>
+                    <h2>TPGStopRoute:</h2>
+                    <p>
+                    <pre>
+ id  | line | starttpgcode | endtpgcode |     distance      
+---+------+--------------+------------+-------------------
+  72 | Y    | POLT         | PAGN       | 0.747157007209657
+ 103 | F    | LMLD         | ZIMG       | 0.685551031729394
+ 104 | F    | ZIMG         | LMLD       | 0.685551031729394
+ 105 | Y    | ZIMG         | PRGM       |  1.36371355797978
+ 106 | Y    | PRGM         | ZIMG       |   1.3855137325742
+ 107 | O    | PRGM         | SIGN       | 0.933634195084444
+ 108 | O    | SIGN         | PRGM       | 0.939506323487253
+ 110 | Y    | RENF         | SIGN       |  1.24229383530575
+ 112 | Y    | BLDO         | RENF       | 0.383096769721964
+ 125 | Y    | AREN         | PXPH       |  0.75218625106547
+                    </pre>
+                    </p>
+				</section>
+				<section>
+                    <h2>Lessons learned</h2>
+					<ul>
+						<li class="fragment">Check that the work is done</li>
+						<li class="fragment">Monitor your disk space</li>
+						<li class="fragment">APIs fail</li>
+						<li class="fragment">Design the database properly from the beginning</li>
+                    </ul>
+				</section>
+                -->
+				<section>
+					<img style="border:none; box-shadow:none" class="stretch" src="images/dfd1.png">
+				</section>
+				<section>
+					<img style="border:none; box-shadow:none" class="stretch" src="images/dfd2.png">
+				</section>
+				<section>
+					<img style="border:none; box-shadow:none" class="stretch" src="images/eda-path.png">
+				</section>
+				<section>
+					<img style="border:none; box-shadow:none" class="stretch" src="images/minutesday.png">
+				</section>
+				<section>
+					<img style="border:none; box-shadow:none" class="stretch" src="images/density.png">
+				</section>
+                <!--
+				<section>
+					<img style="border:none; box-shadow:none" class="stretch" src="images/density-per-day.png">
+				</section>
+                -->
+				<section>
+                    <h2>Model selection:</h2>
+					<ul>
+						<li class="fragment">✓ Linear regression</li>
+						<li class="fragment">✓ Polynomial regression</li>
+						<li class="fragment">✗ Time series</li>
+						<li class="fragment">✗ K-Nearest neighbours</li>
+                    </ul>
+				</section>
+				<section>
+                    <p>speed = β₁·weekday + β₂·schoolfr + β₃·minutesDay^16 + β₄·weekday·minutesDay</p>
+					<img style="border:none; box-shadow:none" class="stretch" src="images/cross-validation-plot.png">
+				</section>
+				<section>
+                    <h2>Model generation</h2>
+					<ul>
+						<li class="fragment">For each segment in the network:
+                            <ul>
+                                <li class="fragment">Prepare the data: filter errors out, calculate speed, generate variables: school in france, day of the week, etc.</li>
+                                <li class="fragment">Make R build a model<pre>
+glm(data = speeds, 
+  speed ~ weekday + 
+          schoolfr + 
+          poly(minutesDay, 16) + 
+          weekday * minutesDay)</pre></li>
+                                    
+                                <li class="fragment">Store the model in the database</li>
+                            </ul>
+                        </li>
+                    </ul>
+				</section>
+				<section>
+                    <h2>Forecast generation</h2>
+					<ul>
+						<li class="fragment">Each 15 minutes:
+                            <ul>
+                                <li class="fragment">for each segment in the network:
+                                <ul>
+                                    <li class="fragment">Get the model from the database</li>
+                                    <li class="fragment">Gather the current variables: weekday, school, etc.</li>
+                                    <li class="fragment">Make R produce a forecast<pre>
+predict.glm(model, newdata = forecastDataset)</pre></li>
+                                    <li class="fragment">Store the forecast in the database</li>
+                                </ul>
+                            </ul>
+                        </li>
+                    </ul>
+				</section>
+				<section>
+                    <h2>Forecasted speeds</h2>
+                    <p>
+                    <pre>
+
+        geom           |  id  |     draw_timestamp     | speed   
+-----------------------+------+------------------------+--------
+ LINESTRING(6.14137... | 8133 | 2017-10-20 15:15:00+00 |      9  
+ LINESTRING(6.14085... | 8215 | 2017-10-20 17:15:00+00 |     10  
+ LINESTRING(6.14108... | 8210 | 2017-10-20 16:00:00+00 |      9  
+ LINESTRING(6.14132... | 8170 | 2017-10-21 05:45:00+00 |     12  
+ LINESTRING(6.14090... | 8205 | 2017-10-20 14:45:00+00 |      9  
+ LINESTRING(6.14123... | 8154 | 2017-10-20 20:30:00+00 |     10  
+ LINESTRING(6.14126... | 8132 | 2017-10-20 15:15:00+00 |      9  
+ LINESTRING(6.14174... | 8126 | 2017-10-20 13:30:00+00 |     10  
+ LINESTRING(6.14173... | 8196 | 2017-10-21 12:15:00+00 |     12  
+ LINESTRING(6.14120... | 8144 | 2017-10-20 18:00:00+00 |     10  
+                    </pre>
+                    </p>
+				</section>
+				<section>
+                    <h2>Performance considerations</h2>
+					<ul>
+						<li class="fragment">Model generation: ~2h</li>
+						<li class="fragment">Forecast generation: ~2m</li>
+                    </ul>
+				</section>
+				<section>
+					<img style="border:none; box-shadow:none" class="stretch" src="images/dfd2.png">
+				</section>
+				<section>
+					<img style="border:none; box-shadow:none" class="stretch" src="images/dfd3.png">
+				</section>
+				<section>
+                    <h2>Forecasted speeds</h2>
+                    <p>
+                    <pre>
+
+        geom           |  id  |     draw_timestamp     | speed   
+-----------------------+------+------------------------+--------
+ LINESTRING(6.14137... | 8133 | 2017-10-20 15:15:00+00 |      9  
+ LINESTRING(6.14085... | 8215 | 2017-10-20 17:15:00+00 |     10  
+ LINESTRING(6.14108... | 8210 | 2017-10-20 16:00:00+00 |      9  
+ LINESTRING(6.14132... | 8170 | 2017-10-21 05:45:00+00 |     12  
+ LINESTRING(6.14090... | 8205 | 2017-10-20 14:45:00+00 |      9  
+ LINESTRING(6.14123... | 8154 | 2017-10-20 20:30:00+00 |     10  
+ LINESTRING(6.14126... | 8132 | 2017-10-20 15:15:00+00 |      9  
+ LINESTRING(6.14174... | 8126 | 2017-10-20 13:30:00+00 |     10  
+ LINESTRING(6.14173... | 8196 | 2017-10-21 12:15:00+00 |     12  
+ LINESTRING(6.14120... | 8144 | 2017-10-20 18:00:00+00 |     10  
+                    </pre>
+                    </p>
+				</section>
+                <section>
+                    <h2>Gathered speeds: Shift</h2>
+                    <p>
+                        <img class="noborder" src="images/table_shift.png">
+                    </p>
+                </section>
+				<section>
+                    <h2>TPGStopRoute</h2>
+                    <p>
+                        <img class="noborder" src="images/table_route.png">
+                    </p>
+				</section>
+				<section>
+                    <h2>OSMSegment</h2>
+                    <p>
+                        <img class="noborder" src="images/table_segment.png">
+                    </p>
+				</section>
+<!--
+                <section>
+                    <h2>OSMSegment</h2>
+                    <p>
+                    <pre>
+ id | startnode  |  endnode   |              geom                          
+---+------------+------------+----------------------------------
+  1 | 3735051668 |  429658525 | LINESTRING(6.1413701 46.210392,...
+  2 |  768498823 | 3606163490 | LINESTRING(6.1408597 46.2098549,..
+  3 | 3606163601 | 1549433399 | LINESTRING(6.1410869 46.21014,6...
+  4 | 3790832523 | 3735051668 | LINESTRING(6.1413209 46.21034,6...
+  5 | 3606163490 |  768498820 | LINESTRING(6.1409013 46.2099104,..
+  6 |  932144719 |   35422066 | LINESTRING(6.1412324 46.2128284,..
+  7 |  308047791 |   35422067 | LINESTRING(6.1412629 46.2129944,..
+  8 | 1191965235 |  895572292 | LINESTRING(6.1417423 46.2107912,..
+  9 |   35422062 | 1191965235 | LINESTRING(6.1417364 46.2107529,..
+ 10 | 3790832520 | 3790832523 | LINESTRING(6.1412051 46.21024,6...
+                    </pre>
+                    </p>
+				</section>
+-->
+				<section>
+                    <h3>And...</h3>
+				</section>
+                <section>
+                    <h2>Performance considerations</h2>
+					<ul>
+						<li>Model generation: ~2h</li>
+						<li>Forecast generation: ~2m</li>
+						<li class="fragment">Data transformation made with PostgreSQL materialized views: ~1m</li>
+						<li class="fragment">Study area
+                            <ul>
+                                <li class="fragment"><pre>  4000 OSM segments</pre></li>
+                                <li class="fragment"><pre>x   96 timestamps</pre></li>
+                                <li class="fragment"><pre>------</pre></li>
+                                <li class="fragment"><pre>384000 records to draw</pre></li>
+                                <li class="fragment">Bidimensional data!</li>
+                            </ul>
+                        </li>
+                    </ul>
+				</section>
+				<section>
+                    <h1>Thanks!</h1>
+                    <p>Slides --&gt; <a href="http://fergonco.org/slides/foss4gbe17/index.html">http://fergonco.org/slides/foss4gbe17/index.html</a>
+                    <p>More details --&gt; <a href="http://fergonco.org/blog.html">http://fergonco.org/blog.html</a>
+				</section>
+			</div>
+			<div style="position:absolute; bottom:15px; left:15px; margin-left:0px; z-index: 20">
+					<a href="http://geomati.co" target="_blank"><img src="logo_geomatico_256.png" height="150px"/></a>
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				transition : "none",
+				history: true,
+                center: false,
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>
