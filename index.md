@@ -36,7 +36,7 @@ You can take a look at my daily activities in my [blog](/blog.html).
 
 A list of my personal projects (to be completed!):
 
-* [Border rampage](http://fergonco.org/2017/08/07/Traffic-prediction-based-on-public-transport-transit-times-%28I%29).html: A map that shows the speeds of the public transport in the border between Geneva and Saint Genis-Pouilly and Ferney Voltaire and allows to browse the last 24 hours of this data. No longer online, but there are a series of posts in [my blog](/blog.html).
+* [Border rampage](http://fergonco.org/2017/08/07/Traffic-prediction-based-on-public-transport-transit-times-%28I%29): A map that shows the speeds of the public transport in the border between Geneva and Saint Genis-Pouilly and Ferney Voltaire and allows to browse the last 24 hours of this data. No longer online, but there are a series of posts in [my blog](/blog.html).
 * [Music Jargon](https://fergonco.github.io/MusicJargon/): Work in progress. A text based music notation. Useful to quickly draft ideas, share them. Finally you can do a *git diff* on your compositions.
 
 I am currently the developer of:
