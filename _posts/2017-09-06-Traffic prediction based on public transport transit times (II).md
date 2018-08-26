@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: default
 title: 'Traffic prediction based on public transport transit times (II): Data gathering'
 date: 2017-09-06
 ---
@@ -108,7 +108,7 @@ This process was designed to be run *indefinitely* on the server. But of course 
 
 I used [Monit](https://mmonit.com/monit/) to monitor the service. It allows to check different aspects of your system (process running, disk space, service output, etc.) and receive mail alerts when some conditions are met. With Monit it was a matter of minutes to setup an alert to be triggered if the service was not running.
 
-But I didn't want to check *only* that the service was running. I wanted to be sure the service was running *and* gathering data properly. The details are explained in [a previous post]({{ site.baseurl }}{% link _posts/2017-03-14-deploy-a-service-from-scratch.md %}).
+But I didn't want to check *only* that the service was running. I wanted to be sure the service was running *and* gathering data properly. The details are explained in [a previous post]({{ site.baseurl }}{% post_url 2017-03-14-deploy-a-service-from-scratch %}).
 
 This proved very useful to detect that the service was running but collapsed due to a memory leak, that databases can run out of space (see next) and that APIs can fail (see further down).
 

@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: default
 title: 'Deploy a service from scratch to monitor data gathering'
 date: 2017-03-14
 ---

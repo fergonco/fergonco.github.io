@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: default
 title: 'Logging sql commands on a docker postgresql instance'
 date: 2017-02-27
 ---
