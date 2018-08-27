@@ -9,7 +9,7 @@ title: Fernando González Cortés
 
 Working as a professional developer since 2003. I have +15 years of experience with geographical information, specially building GIS tools.
 
-I am self-taught person. I started with computers reading a Basic reference documentation when I was 13. It took me a while to understand that "character" was not about my computer personality. Big letdown. Currently trying to get to a decent level on statistics and machine learning.
+I am self-taught person. I started reading a Basic reference documentation when I was 13. It took me a while to understand that "character" was not about my computer personality. Big letdown. Currently trying to get to a decent level on statistics and machine learning.
 
 I try to get a deep knowledge of the technologies I work with. I have worked with these:
 
