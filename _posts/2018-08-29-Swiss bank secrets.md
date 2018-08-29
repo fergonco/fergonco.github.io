@@ -8,7 +8,7 @@ date: 2018-08-29
 
 The last 10 months I have been involved in a very nice project, which tries to show to the world the nicest benches in Switzerland. Many languages use the same word for "bench" and for "bank" and the website title is a funny pun. Not in English, though.
 
-Users of the web application ([www.bankgeheimnisse.ch](https://www.bankgeheimnisse.ch)) can place new benches in the map, add comments and pictures to existing ones, say which ones they have visited and add some metadata (accessible by wheelchair, paperbins, etc.).
+Users of the web application ([www.bankgeheimnisse.ch](https://www.bankgeheimnisse.ch)) can place new benches in the map, add comments and pictures to existing ones, say which ones they have visited and add some metadata (accessible by wheelchair, paper bins, etc.).
 
 I developed the site from scratch and, although there is still a lot of work to do, we are getting some media attention (easily recognizable in the charts shown below).
 
