@@ -4,21 +4,23 @@ title: 'Form-based authentication on single page applications with Spring Securi
 date: 2018-10-12
 ---
 
-In this post I'll show how to change the default log in behavior of Spring Boot + Spring Security in order to adapt it to Singe Page Applications (SPA). The default login workflow in Spring Security is as follows:
+In this post I'll show how to change the default form based authentication behavior in Spring Security in order to adapt it to Singe Page Applications (SPA). The default workflow is as follows:
 
-- When accessing a protected resource without being authenticated, it redirects to the login page (Spring Security generates a page automatically for you if there is none).
+- When a user accesses a protected resource without being authenticated, it redirects to the login page (Spring Security generates a page automatically for you if there is none).
 - When the login succeeds, it redirects to the root of the application.
 - On a successful logout, it redirects to *http://localhost:8080/login?logout*
 
-However, on a SPA we don't want to reload the page and we will be doing login using an Ajax call. Our desired behavior would be as follows:
+However, on a SPA we don't want to reload the page. Instead we will be sending the user credentials with an asynchronous call. Our desired workflow would be as follows:
 
 - Return 403 (Forbiden) if the resource is protected and user is no autenticated.
 - On successful login return 200 (OK). If login fails, return 401 (Unauthorized).
 - On a successful logout return 200 (OK).
 
+The code shown in the following points can be found here: https://github.com/fergonco/spring-form-based-auth.
+
 ## Default login workflow
 
-Create a new project using with Spring Initializr (https://start.spring.io/) selecting "Web", "Security" and "DevTools" as technologies.
+If you want to do the next steps by yourself you can create a new project using with Spring Initializr (https://start.spring.io/), selecting "Web", "Security" and "DevTools" as technologies.
 
 We create now a static resource that we want to protect, *secret.txt*, in the *src/main/resources/static* folder containing something like:
 
@@ -31,10 +33,13 @@ In order to protect it we will configure Spring Security:
 {% highlight java %}
     package org.fergonco.blog.springformbasedauth;
 
+    import org.springframework.beans.factory.annotation.Autowired;
     import org.springframework.context.annotation.Configuration;
+    import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
     import org.springframework.security.config.annotation.web.builders.HttpSecurity;
     import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
     import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+    import org.springframework.security.core.userdetails.User;
 
     @Configuration
     @EnableWebSecurity
@@ -43,16 +48,16 @@ In order to protect it we will configure Spring Security:
         @Override
         protected void configure(HttpSecurity http) throws Exception {
             http.authorizeRequests().mvcMatchers("/secret.txt").authenticated()//
-            .and()//
-            .formLogin().permitAll();
+                    .and()//
+                    .formLogin().permitAll();
 
             http.csrf().disable();
         }
 
         @Autowired
         public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-            auth.inMemoryAuthentication().withUser(
-                    User.withDefaultPasswordEncoder().username("user").password("123").roles("USER").build());
+            auth.inMemoryAuthentication()
+                    .withUser(User.withDefaultPasswordEncoder().username("user").password("123").roles("USER").build());
         }
     }
 {% endhighlight %}
@@ -61,7 +66,7 @@ This configuration does three things:
 
 - Requires authentication in order to access the protected resource, installing a */login* and */logout* endpoints that follow the behavior described before. 
 - Disables CSRF, for simplicity.
-- Creates a user called "user" with passord "123".
+- Creates a user called "user" with password "123".
 
 Some curl outputs follows, to demonstrate the redirection workflow:
 
@@ -173,8 +178,8 @@ In order to get rid of all the redirections and get the desired response codes w
 
 which:
 
-- installs an exception handler to return 403 whenever an unauthenticated user accesses the protected resource.
-- installs success and failure handlers for login and logout. These handlers are instances of an inner class:
+- installs an exception handler to return 403 whenever an unauthenticated user accesses the protected resource. This is actually the default behavior of Spring Security, but the call to *formLogin* to setup form-based login overrides it.
+- installs success and failure handlers for login and logout. These handlers are instances of an inner class that returns in all cases a status code received as a parameter:
 
 {% highlight java %}
 	class HTTPStatusHandler
@@ -207,7 +212,7 @@ which:
 	}
 {% endhighlight %}
 
-Now, the same curl commands as before:
+Now, the same curl commands as before. Note that we don't get redirections anymore but the session management and the sending of the session cookie is still there.
 
 - An unauthenticated user requests the protected resource.
 
@@ -249,7 +254,7 @@ Now, the same curl commands as before:
     > User-Agent: curl/7.58.0
     > Accept: */*
     > Content-Length: 247
-    > Content-Type: multipart/form-data; boundary=------------------------6c7e682d32e975d0
+    > Content-Type: multipart/form-data; boundary=------------------------cf8a1b68f3403b66
     > 
     < HTTP/1.1 200 
     < X-Content-Type-Options: nosniff
@@ -261,10 +266,10 @@ Now, the same curl commands as before:
     * cookie size: name/val 10 + 32 bytes
     * cookie size: name/val 4 + 1 bytes
     * cookie size: name/val 8 + 0 bytes
-    * Added cookie JSESSIONID="ADE478E6F4624262BCC1BEBD0335E813" for domain localhost, path /, expire 0
-    < Set-Cookie: JSESSIONID=ADE478E6F4624262BCC1BEBD0335E813; Path=/; HttpOnly
+    * Added cookie JSESSIONID="8D3D22C89AEE8477092A3036C7113002" for domain localhost, path /, expire 0
+    < Set-Cookie: JSESSIONID=8D3D22C89AEE8477092A3036C7113002; Path=/; HttpOnly
     < Content-Length: 0
-    < Date: Sat, 13 Oct 2018 06:26:27 GMT
+    < Date: Sat, 13 Oct 2018 06:34:00 GMT
     < 
     * Connection #0 to host localhost left intact
 {% endhighlight %}
@@ -273,14 +278,14 @@ Now, the same curl commands as before:
 
 {% highlight bash %}
     $ curl -v --cookie /tmp/cookie http://localhost:8080/logout
-    *   Trying 127.0.0.1...
+    * Trying 127.0.0.1...
     * TCP_NODELAY set
     * Connected to localhost (127.0.0.1) port 8080 (#0)
     > GET /logout HTTP/1.1
     > Host: localhost:8080
     > User-Agent: curl/7.58.0
     > Accept: */*
-    > Cookie: JSESSIONID=ADE478E6F4624262BCC1BEBD0335E813
+    > Cookie: JSESSIONID=8D3D22C89AEE8477092A3036C7113002
     > 
     < HTTP/1.1 200 
     < X-Content-Type-Options: nosniff
@@ -290,7 +295,7 @@ Now, the same curl commands as before:
     < Expires: 0
     < X-Frame-Options: DENY
     < Content-Length: 0
-    < Date: Sat, 13 Oct 2018 06:27:24 GMT
+    < Date: Sat, 13 Oct 2018 06:36:12 GMT
     < 
     * Connection #0 to host localhost left intact
 {% endhighlight %}

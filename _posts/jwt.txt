@@ -1,0 +1,20 @@
+In this post we will be implementing JWT based authentication.
+
+how does the token authentication works.
+
+Why: stateless discussion + microservices
+
+Challenges:
+
+* Logout
+* Deal with expiration: short lived tokens (recomended practice) + renewal
+* Returned on a custom header (because of the renewal)
+
+Weak points:
+
+* No secret rotation
+* No real logout (we should keep a black list of tokens)
+* token hijacking (we didn't implement any browser fingerprinting because that can be also tampered by an attacker)
+
+Implementation details
+
