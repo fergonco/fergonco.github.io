@@ -16,7 +16,7 @@ However, on a SPA we don't want to reload the page. Instead we will be sending t
 - On successful login return 200 (OK). If login fails, return 401 (Unauthorized).
 - On a successful logout return 200 (OK).
 
-The code shown in the following points can be found here: https://github.com/fergonco/spring-form-based-auth.
+The code shown in the following points can be found here: [https://github.com/fergonco/spring-form-based-auth](https://github.com/fergonco/spring-form-based-auth).
 
 ## Default login workflow
 
