@@ -17,15 +17,15 @@ However, this approach is not suitable for REST APIs. The fact that the server k
     context on the server.
 {% endhighlight %}
 
-Respecting this principle allows us to scale a system easily (you don't need to share sessions among the nodes) and simplifies the monitoring and recovering processes, as [stated by Roy Fielding in his disertation](https://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm#sec_5_1_3).
+Respecting this principle allows us to scale a system easily (you don't need to share sessions among the nodes) and simplifies the monitoring and recovering processes, as [stated by Roy Fielding in his dissertation](https://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm#sec_5_1_3).
 
 Therefore, the session information has to be kept on the client side and be sent on each request. This information can be just the username (the server would get more information from the database) or it may include more data, like roles, permissions, etc. (making it possible to save a database access).
 
-In the following points I'll be implementing [JSON Web Tokens (JWT)](https://tools.ietf.org/html/rfc7519) authentication, which is very common nowadays. Spring does not offer out of the box support for JWT and I had to gather information from many sources in order to get a complete picture. This post tries to summarize all the information I got.
+In the following points I'll be implementing authentication with [JSON Web Tokens (JWT)](https://tools.ietf.org/html/rfc7519), which is very common nowadays. Spring does not offer out of the box support for JWT and I had to gather information from many sources in order to get a complete picture. This post tries to summarize all the information I got.
 
 ## JWT
 
-A better explanation can be found [here](https://github.com/jwtk/jjwt#overview) ([JJWT](https://github.com/jwtk/jjwt) is the Java library used in this post to manipulate JWT tokens). So I will quickly go over the JWT aspects that are particularly relevant. For a detailed description, you can read [the specification](https://tools.ietf.org/html/rfc7519).
+A better explanation can be found [here](https://github.com/jwtk/jjwt#overview) ([JJWT](https://github.com/jwtk/jjwt) is the Java library used in this post to manipulate JWT tokens), so I will quickly go over the JWT aspects that are particularly relevant. For a detailed description, you can read [the specification](https://tools.ietf.org/html/rfc7519).
 
 JSON Web Tokens have three parts:
 
@@ -68,19 +68,20 @@ The workflow for a token authentication schema is as follows:
 (1) The client sends credentials to an authentication service.
 (2) The service
    (2.1) validates the credentials. If they are correct,
-   (2.2) it generates a token
-   (2.3) it signs it with a private key
-   (2.4) it returns it to the client
-(3) The client receives the token in the response and keeps it for use later on requests that require authentication.
+   (2.2) it generates a token signed with a private key
+   (2.3) it returns it to the client
+(3) The client receives the token in the response and keeps it for use later on
+    requests that require authentication.
 {% endhighlight %}
 
 Later, the client accesses a resource that requires authentication:
 
 {% highlight plaintext %}
-(4) The client sends a request including the token in the *Authorization* header, normally with this format: "Bearer &lt;token&gt;".
+(4) The client sends a request including the token in the *Authorization* header, 
+    normally with this format: "Bearer <token>".
 (5) The server performs several checks, like the signature, expiration date, etc. and 
     obtains the relevant information (user identification, role, etc.)
-(6) If all the checks are passed, the server returns the resouce to the client.
+(6) If all the checks are passed, the server returns the resource to the client.
 {% endhighlight %}
 
 This schema presents some challenges that are new with regard to the cookie based session management:
@@ -134,7 +135,7 @@ As in the previous post, we will be creating a protected resource "secret.txt" i
 
     This is our secret!
 
-And again as in the previous post (a quick 2 minutes read is worth if you don't know what is going on here), we replace the default Spring Security form login redirections:
+And again as in the previous post (a quick 2 minutes read is worth if you don't know what is going on here), we replace the default Spring Security form based login redirections:
 
 {% highlight java %}
     @Override
@@ -158,13 +159,13 @@ And again as in the previous post (a quick 2 minutes read is worth if you don't 
 
 With this departing point, the implementation consists on:
 
-* A success handler for login actions that returns the new token in a HTTP header (jwt-token).
+* A success handler for login actions that returns the new token in a HTTP header (*jwt-token*).
 * JWTFilter: A *javax.servlet.Filter* that processes each request and:
   * Creates an *Authentication* instance on the *SecurityContext* whenever the request contains a valid token.
   * If the token is at the end of its lifespan it will return a new token in the *jwt-new-token* header.
 * JWTProvider: A class dealing with the token related operations: creation, extraction from the request, validation, etc.
 
-Let's start by the login success handler. Instead of using HTTPStatusHandler in order to just set the status code, we will need another implementation that sets the status code to 200 and returns a token. This is configured in the *WebSecurityConfig* class like this:
+Let's start by the login success handler. Instead of using *HTTPStatusHandler* in order to just set the status code, we will need another implementation that sets the status code to 200 and returns a token. This is configured in the *WebSecurityConfig* class like this:
 
 {% highlight java %}
         .formLogin().permitAll()//
@@ -177,16 +178,13 @@ Whenever a successful login takes place, the instance of *JWTStatusHandler* will
 
 {% highlight java %}
     class JWTStatusHandler implements AuthenticationSuccessHandler {
-
         @Override
         public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                 Authentication authentication) throws IOException, ServletException {
             String token = jwtProvider.createToken(authentication.getName());
             response.addHeader("jwt-token", token);
             response.setStatus(HttpStatus.OK.value());
-
         }
-
     }
 {% endhighlight %}
 
@@ -438,9 +436,23 @@ $ curl -v -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwiaWF
 This is my secret
 {% endhighlight %}
 
+## What else?
+
+Some more random thoughts that didn't receive enough attention this time:
+
+* We didn't deal with client-side token persistent storage. What if you want tokens with a lifespan of days? Where do you store them? Local storage? Cookies? It would be a pity that your secure connection between client and server becomes useless just because you store your token where you shouldn't.
+
+* Are your tokens long lived? Then you have either one of these problems or the other:
+
+  * If you hold more information than the user id, like roles, etc. how do you deal with updates?
+
+  * IF you hold just the user id and your services queries the database to get user information, your API is not so stateless anymore.
+
+[This Hacker News discussion](https://news.ycombinator.com/item?id=11895440) about the usage in general of JWT as replacement for sessions is interesting.
+
 ## Best practices
 
-There are a lot of pages suggesting best practices. I found these interesant:
+There are a lot of pages suggesting best practices. I found these interesting:
 
 - [JJWT documentation](https://github.com/jwtk/jjwt#jws)
 - [This answer in Stack Overflow](https://stackoverflow.com/questions/30523238/best-practices-for-server-side-handling-of-jwt-tokens/44247711#44247711). Or maybe the whole question.
@@ -449,6 +461,6 @@ There are a lot of pages suggesting best practices. I found these interesant:
 And I got a quick piece of advice by [Daniel Kachakil](https://twitter.com/Kachakil) in an informal conversation:
 
 - Be sure it does not accept unsigned tokens (alg=none)
-- If you use HMAC instead of asymetric keys, use a long and complex key.
+- If you use HMAC instead of asymmetric keys, use a long and complex key.
 - Use an existing library. Own implementations are a danger!
 
