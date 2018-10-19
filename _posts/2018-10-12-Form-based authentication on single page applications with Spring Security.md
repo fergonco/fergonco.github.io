@@ -4,6 +4,8 @@ title: 'Form-based authentication on single page applications with Spring Securi
 date: 2018-10-12
 ---
 
+# Form-based authentication on single page applications with Spring Security
+
 In this post I'll show how to change the default form based authentication behavior in Spring Security in order to adapt it to Singe Page Applications (SPA). The default workflow is as follows:
 
 - When a user accesses a protected resource without being authenticated, it redirects to the login page (Spring Security generates a page automatically for you if there is none).
