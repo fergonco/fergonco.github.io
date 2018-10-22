@@ -3,8 +3,6 @@ layout: default
 title: Fernando González Cortés
 ---
 
-<!--[foto]: foto.jpg-->
-
 # Fernando González Cortés
 
 Working as a professional developer since 2003. I have +15 years of experience with geographical information, specially building GIS tools.
