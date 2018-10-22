@@ -1,7 +1,7 @@
 ---
 layout: default
 title: 'Spring REST API authentication using JSON Web Tokens'
-date: 2018-10-17
+date: 2018-10-22
 ---
 
 # Spring REST API authentication using JSON Web Tokens
@@ -442,13 +442,13 @@ Some more random thoughts that didn't receive enough attention this time:
 
 * We didn't deal with client-side token persistent storage. What if you want tokens with a lifespan of days? Where do you store them? Local storage? Cookies? It would be a pity that your secure connection between client and server becomes useless just because you store your token where you shouldn't.
 
-* Are your tokens long lived? Then you have either one of these problems or the other:
+* Are your tokens long lived? Then you have either one of these problems:
 
   * If you hold more information than the user id, like roles, etc. how do you deal with updates?
 
-  * IF you hold just the user id and your services queries the database to get user information, your API is not so stateless anymore.
+  * If you hold just the user id and your services queries the database to get user information, your API is not so stateless anymore.
 
-[This Hacker News discussion](https://news.ycombinator.com/item?id=11895440) about the usage in general of JWT as replacement for sessions is interesting.
+[This Hacker News discussion](https://news.ycombinator.com/item?id=11895440) about the usage of JWT as replacement for sessions is interesting.
 
 ## Best practices
 
