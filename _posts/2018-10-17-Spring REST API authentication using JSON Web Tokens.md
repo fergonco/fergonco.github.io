@@ -1,7 +1,7 @@
 ---
 layout: default
 title: 'Spring REST API authentication using JSON Web Tokens'
-date: 2018-10-22
+date: 2018-10-17
 ---
 
 # Spring REST API authentication using JSON Web Tokens
