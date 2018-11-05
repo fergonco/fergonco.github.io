@@ -1,16 +1,13 @@
-☐ Format the hourly log
-☐ Evaluate the memory leak with a production build (better on the project with MUItables).
-☐ Spellcheck
-☐ Proofread
+☐ Try to embed the application on each step of the tutorial?
 ☐ Publish
 
-# The minimum you need to know to build a React application
+# The minimum you need to know in order to build a React application
 
-Recently I had to build a React interface with a bit of a time pressure so I decided to build it "without learning React". Normally I read the documentation of the tools I work with but in this case it will be different: I will search for the different aspects of React in response to what I need to build a specific application. As a result, what I learned is "the minimum you need to know to build a React application". Let's go.
+Recently I had to build a small React interface with a bit of a time pressure so I decided to build it "without learning React". Normally I read the documentation of the tools I work with but in this case it will be different: I will search for the different aspects of React as I need them in order to build the application. As a result, what I learned is "the minimum you need in order to know to build a React application". Let's go.
 
-The application will be two tabs, each one showing a table that is populated in response to an asynchronous query. [Like this](/react-post/index.html).
+The application will be two tabs, each one showing a counter that is populated in response to a (faked) asynchronous query. [Like this](/react-post/index.html).
 
-The whole interface took 8 hours to build. Hopefuly this post can save you that time!
+The whole thing took 8 hours to build. Hopefully this post can save you that time!
 
 The post is organized this way:
 
@@ -18,34 +15,54 @@ The post is organized this way:
 2. Creating a React project.
 3. Understanding the concept of component.
 4. Building the tabs user interface, where I deal with some practical aspects of using React.
-5. Hourly log.
 
 ## Disclaimer
 
-This quick tutorial can get you started, but remember that I just dedicated 8h to learn React. Most of the things I mention here can be plain wrong. If you are planning to build some serious site you probably want to read the documentation and see how these concepts fit there.
+This quick tutorial will condense the *essential* information in order to build React applications, but remember that I just dedicated 8h to it. Most of the things I mention here can be plain wrong and there may be important omissions. If you are planning to build some serious application you need additional sources of information, probably the official documentation, which looks quite complete and easy to process.
 
 ## Creating a React project
 
-A react project is quite a complex thing, which puts together several different technologies. There is a project called [*create-react-app*]() that puts all this together automatically by typing in the command line this:
+React projects are quite a complex because they put together several different technologies. However, there is a project called [*create-react-app*]() that configures a lot of things automatically. You just need to install and run in order to create your React project:
 
 {% highlight bash %}
 npm install -g create-react-app
 create-react-app my-app
 {% endhighlight %}
 
-This will create a project with [a lot of things configured on it](https://github.com/facebook/create-react-app#whats-included). The following command runs your project:
+[Here](https://github.com/facebook/create-react-app#whats-included) is the list of the things it configures.
+
+The following command runs your project:
 
 {% highlight bash %}
 npm start
 {% endhighlight %}
 
-The project created contains no configuration file, all is defined by default in some dependency probably. It is possible to [*eject*](https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/template/README.md#npm-run-eject) from this situation and get all the configuration files in your project:
+The project created contains no configuration file. Probably all is defined by default in some dependency. However, it is possible to [*eject*](https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/template/README.md#npm-run-eject) from this situation and get all the configuration files in your project:
 
 {% highlight bash %}
 npm run eject
 {% endhighlight %}
 
-Finally, you just run *npm run build* in order to get the application built in a *build* folder.
+Finally, you just run
+
+{% highlight bash %}
+npm run build
+{% endhighlight %}
+
+in order to generate the production ready artifacts in a *build* folder. The build command outputs useful information, for example that you have to put the path of your application in the *homepage* attribute in *package.json*. In my case, [the application](/react-post/index.html) is installed in the "/react-post" path, so I have to set it to "/react-post":
+
+{% highlight json %}
+{
+  "name": "react-post",
+  "version": "0.1.0",
+  "private": true,
+  "homepage": "/react-post",
+  "dependencies": {
+    ...
+  }
+  ...
+}
+{% endhighlight %}
 
 ## React components
 
@@ -68,13 +85,13 @@ So in this initial call, the JSXExpression will be a reference to the React comp
 ReactDOM.render(<MyComponent/>, document.getElementById("root"));
 {% endhighlight %}
 
-This will make the framework instantiate a *MyComponent* instance, make it "render" some contents that will be added to the *root* element in the DOM.
+This will make React instantiate a *MyComponent* instance and make it "render" some contents that will be added to the *root* element in the DOM.
 
-So apparently we are instantiating components by means of JSX expressions and adding their *render* output to the DOM. Let's see what a component looks like.
+So apparently we are instantiating components by means of JSX expressions and adding their *render* output to the DOM. Let's see how a component looks like.
 
 ### Defining your components
 
-Components are subclases of *React.Component*.
+Components are subclasses of *React.Component*.
 
 {% highlight javascript %}
 import React from 'react';
@@ -97,12 +114,16 @@ class MyComponent extends React.Component {
 }
 {% endhighlight %}
 
-(By the way, yes: the syntax coloring gets all messed up with JSX in this post)
+The *render* method will be also using JSX expressions for this purpose.
+
+(By the way, yes: the syntax coloring in this post gets all messed up with the JSX expressions)
 
 In order ~~to produce some content~~ *render*, the component needs information. There are two sources of information for a component:
 
 * **State**: will contain information of the current state of the component, like checked or not checked in case of a checkbox.
 * **Properties**: used to customize your component instance, defined in JSX expressions when including the instance of the component.
+
+Let's see each one of them in detail.
 
 #### State
 
@@ -121,42 +142,49 @@ class MyComponent extends React.Component {
         };
     }
 
-    increaseCounter = () => {
-        this.setState({
-            counter: this.state.counter + 1
-        });
-    }
-
     render() {
         return <span>Hello world clicked {this.state.counter} times</span>;
     }
 }
 {% endhighlight %}
 
-Note how in the previous example the constructor defines a state attribute and the render method has an expression between curly braces referencing it.
+Note how in the previous example the constructor defines a *state* attribute and the render method has an expression between curly braces referencing it.
 
 As a subclass of React.Component, your components inherit several methods to deal with the state, I know about:
 
-* *setState*, which merges the existing state with the given parameter
-* *replaceState*, which sets the given parameter as the new state
+* *setState*, which merges the given parameter with the existing state.
+* *replaceState*, which sets the given parameter as the new state.
 
-These methods will be called in response to an event, an asynchronous call response, etc. and will trigger a *render* process. It is important to remember that it is the call to these methods which is forcing a render. If we set directly the *state* attibute the component will not be rendered.
+These methods will be called in response to an event, an asynchronous call response, etc. and will trigger a *render* process. It is important to remember that it is the call to these methods which is forcing a render. If we set directly the *state* attribute the component will not be rendered.
 
-For example, we can count the clicks on the component:
+In the next example, we update the counter in the *increaseCounter* method:
 
 {% highlight javascript %}
-increaseCounter = ()=>{
-    this.setState({
-        counter: this.state.counter + 1
-    });
-}
+import React from 'react';
+import MUIDataTable from 'mui-datatables';
 
-render() {
-    return <span onClick={this.increaseCounter}>Hello world clicked {this.state.counter} times</span>;
+class MyComponent extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            counter: 0
+        };
+    }
+
+    increaseCounter = ()=>{
+        this.setState({
+            counter: this.state.counter + 1
+        });
+    }
+
+    render() {
+        return <span onClick={this.increaseCounter}>Hello world clicked {this.state.counter} times</span>;
+    }
 }
 {% endhighlight %}
 
-Note how the *increaseCounter* function is using the arrow function syntax. This is order to have a proper reference in *this*. I will not make any further comments on this.
+Note how it is using the arrow function syntax. This is in order to have a proper reference in *this*.
 
 #### Properties
 
@@ -178,13 +206,15 @@ ReactDOM.render(<MyComponent message="Hallo Welt Zähler: "/>, document.getEleme
 
 BTW, React components can also be a function, but just ignore this and do not very scared if you see one.
 
-## Practical use case
+## Counters inside tabs
 
-There are two more important concepts that I want to show you, in order to do that we need a slightly more complex example. We want to have two tabs showing two different things. In this example we will be showing two instances of the counter. So, selecting one tab would show one counter and selecting the other tab would show us the other counter. Easy, right? well, not that much. 
+Now we want to put the counters inside tabs and show one or the other depending on the selected tab. Selecting one tab would show one counter and selecting the other tab would show us the other counter. Easy, right? well, not that much. 
 
 ### Material-UI
 
 I didn't do any research on this, so there may be better options. However [Material UI](https://github.com/mui-org/material-ui) it seems a rather popular component repository, which follows the Google *Material*'s design, whatever that is. Cool components to reuse, in any case.
+
+The [demo page](https://material-ui.com/demos/tabs/) has links to the GitHub repository with the code, which is useful to understand how to use the components.
 
 ### The tabs
 
@@ -216,7 +246,7 @@ The code can be found [here](https://github.com/fergonco/react-post/blob/4944e4b
 
 ### Selecting the tabs
 
-If you see the resulting application you will notice that the selected tab cannot be changed. This is because the *Tabs* *value* property is hardcoded to "c1". We could set it with a variable and add an *onChange* property to update the variable value. Then we should force the component to re-*render*. The easiest way to force this *render* process is to actually making this variable the state of a parent component, so that we can use the *setState* method to force the rendering of the tree under it.
+If you see the resulting application you will notice that the selected tab cannot be changed. This is because the *Tabs* *value* property is hardcoded to "c1". We could set the *value* property with a variable and add an *onChange* property to update the variable value. Then we should force the component to re-*render*. The easiest way to force this *render* process is to actually make this variable the state of a parent component, so that we can use the *setState* method to force the rendering of the tree under it.
 
 {% highlight javascript %}
 class TabsContainer extends React.Component {
@@ -247,7 +277,7 @@ class TabsContainer extends React.Component {
 ReactDOM.render(<TabsContainer/>, document.getElementById('root'));
 {% endhighlight %}
 
-Now, when *changeTab* is invoked in response to a tab change, the state of TabsContainer will be updated and rendered again, along with the children components Tabs and Tab.
+Now, when *changeTab* is invoked in response to a tab change, the state of *TabsContainer* will be updated and rendered again, along with the children components Tabs and Tab.
 
 The code can be found [here](https://github.com/fergonco/react-post/blob/780cd504a82585c6111590eb6cdd2f33d3fc790b/src/index.js).
 
@@ -272,11 +302,11 @@ render() {
 }
 {% endhighlight %}
 
-Where all the controls are wrapped inside a *div* (you cannot define several components in a JSX expression) and the *MyComponent* instances are evaluated between curly braces conditionally to the value of *this.state.selectedTab*. This is however a bad idea because a new component gets instantiated on each render. If you go the browser and change tabs you will see that the counter starts at zero everytime (because it is a new one).
+Where all the controls are wrapped inside a *div* (you cannot define several components in a JSX expression) and the *MyComponent* instances are evaluated between curly braces conditionally to the value of *this.state.selectedTab*. This is however a bad idea because a new component gets instantiated on each render. If you see the resulting application, changing tabs makes the counters start at zero every time (because it is a new one).
 
 The code can be found [here](https://github.com/fergonco/react-post/blob/dbace48eed05bb9d33c7b47e5ba14d5c4832045b/src/index.js).
 
-This approach is specially dangerous if the component is listening some event, or in general anybody has a reference to it, because we will be creating a lot of components that we no longer use whose memory cannot be freed because they are still referenced, a.k.a. memory leak.
+This approach is specially dangerous if the component is listening some event, or if there is somewhere in the application a reference to it, because we will be creating a lot of components that we no longer use whose memory cannot be freed because they are still referenced, a.k.a. memory leak.
 
 Instead we want to instantiate them only once and show them conditionally. We will be using a *.hidden* class like this:
 
@@ -286,7 +316,7 @@ Instead we want to instantiate them only once and show them conditionally. We wi
 }
 {% endhighlight %}
 
-and we will embed the counters in divs, that will be shown depending on the *selectedTab* state:
+and we will embed the counters in *div*s, that will be shown depending on the *selectedTab* state:
 
 {% highlight javascript %}
 render() {
@@ -325,10 +355,20 @@ setTimeout(()=>{
 }, 2000);
 {% endhighlight %}
 
-The only and dangerous approach I have found is to use an event, for example at the document level. Let's say we use "counter1-init" as event for the first counter and "counter2-init" as event for the second one. Our timeout would look like this:
+The only and dangerous approach I have found is to use an event, for example at the *document* level. Let's say we use "counter1-init" as event for the first counter and "counter2-init" as event for the second one. Our timeout would look like this:
 
 {% highlight javascript %}
+setTimeout(()=>{
+    let c1 = 10;
+    let c2 = 5;
 
+    document.dispatchEvent(new CustomEvent("counter1-init", {
+        detail: c1
+    }));
+    document.dispatchEvent(new CustomEvent("counter2-init", {
+        detail: c2
+    }));
+}, 2000);
 {% endhighlight %}
 
 And our components should listen for these events, for example in the constructor:
@@ -354,7 +394,7 @@ class MyComponent extends React.Component {
 
 {% endhighlight %}
 
-Note that we have two events: *counter1-init* and *counter2-init*, so the event name to register our component instance is parameterized through properties. In the call to *addEventListener* we use the *eventName* property, which has to be set when the component is instantiated in the JSX expression in the *TabsContainer.render()* method:
+Note that we have two events: *counter1-init* and *counter2-init*, so the event name to register our component instance is parameterized through the *eventName* property. In the call to *addEventListener* we use the *eventName* property, which has to be set when the component is instantiated in the JSX expression in the *TabsContainer.render()* method:
 
 {% highlight javascript %}
 [...]
@@ -369,7 +409,7 @@ Note that we have two events: *counter1-init* and *counter2-init*, so the event 
 
 The code can be found [here](https://github.com/fergonco/react-post/blob/ed271755b1c483a3b745f234691e4bb97b677e6f/src/index.js).
 
-#### Life cycle 
+#### Components life cycle 
 
 I said before that this approach is dangerous because we are keeping a reference to our components (and we rely in React to instantiate and discard them). If React decides to discard our components in each render, as we saw previously, we'll have a memory leak.
 
@@ -422,145 +462,3 @@ I did some tests with the previous syntax:
 {% endhighlight %}
 
 which creates a new *MyComponent* instance on each call to *render()*, and there is still a memory leak. Why? I don't know. It could have something to do with the development mode, or maybe there is something wrong with the code. In any case the approach to follow is not to use that syntax and try to stick with the same instance of my component as much as possible.
-
-## Hourly log
-
-# 1h: went through the tutorial
-
-    Current concept of react: It is a library to reuse web components.
-
-    - How do I create a hello world SPA? Do I create a HTML template and insert react controls? Do I create a root control and all the other react controls nested on it?
-    - How do I babelize the result?
-
-# 2h:
-
-    Steps:
-
-        ☑ Try to use one of the material components:
-        Install material: https://material-ui.com/
-
-        ☑ Try to use a tab component as the root of my application
-            - How do I change the tab? Listening to the onChange event
-
-    Questions:
-
-    ☑ How do I create a hello world SPA? Do I create a HTML template and insert react controls? Do I create a root control and all the other react controls nested on it?
-        Both options seem possible. I'll try to go for having a root React component.
-    ☐ Does the tab component contain a panel that is changed everytime? it seems it does not.
-    ☐ How do I babelize the result?
-
-# long time has passed. I don't remember well the tutorial so I may be missing obvious points
-
-# 3h: 
-
-    I took a look at the code (https://github.com/mui-org/material-ui/blob/master/docs/src/pages/demos/tabs/SimpleTabs.js) for the tabs demo (https://material-ui.com/demos/tabs/) and saw how the SimplaTabs component was holding the index of the selected tab in Tabs.
-
-    I saw as well 
-
-    * how it conditionally showed the component belonging to the selected tab.
-    * how it could even be a function!
-
-        function MarketView() {
-            return (
-                <span>Market</span>
-            );
-        }
-
-    React components:
-    * can have props, which are parameters set on the render method
-    * this.props.children is the *innerHTML* of the call
-    * have a state, which is hold at the instance level (how is it done with function based components? I don't know, I don't care)
-    
-    Steps:
-
-        ☑ Embed the Tab component in another component that holds the tab status
-        ☑ Make the Tab component pick the status from there
-        ☑ add a panel that changes on tab changes.
-        ☑ Put a grid on the component. We use MUI-Datatables over the ones of material-ui because of the capability to specify dynamically the data
-
-    Questions:
-
-        ☑ How do I create a hello world SPA? Do I create a HTML template and insert react controls? Do I create a root control and all the other react controls nested on it?
-            Both options seem possible. I'll try to go for having a root React component.
-        ☑ Does the tab component contain a panel that is changed everytime? it seems it does not.
-        ☐ Can we make a REST GET query and populate the data accordingly (rows and columns)? We will not be able to populate the columns if the request contains no entity (could this be useful https://www.django-rest-framework.org/tutorial/7-schemas-and-client-libraries/?).
-        ☐ How do I babelize the result?
-
-# 5h: 
-    
-    There is *setState* and *replaceState*
-    It seems that render reuses components, but if the component is between braces, they are instantiated on each render.
-        Therefore: this way to introduce visibility is instantiating a component on each render: https://eddyerburgh.me/toggle-visibility-with-react
-            It has performance implications.
-            If there is a reference to the component it will not be freed and we have a memory leak
-            The state of the component has to be reinitialized
-        Note that if this happens at some point up in the tree containing this component we have the same problem.
-        
-    Steps:
-    
-        ☑ Make an asynchronous request returning data to be shown in the table component.
-            ☑ From this stackoverflow answer (https://stackoverflow.com/a/31869669/10279433) I get that the component has to register a listener somewhere and be called later in order to update its state. Probably this is related with Redux, but I don't see any problem with this simplistic approach.
-        ☑ Try to make the component generic
-        ☑ Solve the fact that changing the tab erases the component
-            This way to introduce visibility is instantiating a component on each render: https://eddyerburgh.me/toggle-visibility-with-react
-
-    Questions:
-    
-        ☑ How do I create a hello world SPA? Do I create a HTML template and insert react controls? Do I create a root control and all the other react controls nested on it?
-            Both options seem possible. I'll try to go for having a root React component.
-        ☑ Does the tab component contain a panel that is changed everytime? it seems it does not.
-        ☑ Can we make a REST GET query and populate the data accordingly (rows and columns)? We will not be able to populate the columns if the request contains no entity (could this be useful https://www.django-rest-framework.org/tutorial/7-schemas-and-client-libraries/?).
-            We are setting the columns as props and updating the control with a callback
-        ☑ Can we have only one component for the table (and have a specialization of it whenever we need something different)? Yes
-        ☑ We are introducing listeners, pointers to our component. This means that the memory used by it will not be freed if the component is not necessary anymore. How are components instantiated and how long do they live? It seems that render reuses components, but if the component is between braces, they are instantiated on each render.
-        ☐ How does conditional rendering (https://reactjs.org/docs/conditional-rendering.html) affects the child component lifecycle?
-        ☐ How do I babelize the result?
-
-# 6h: 
-
-    Searching for component destroying I found the react oficial component lifecycle documentation (https://reactjs.org/docs/react-component.html) which contains a reference to a nice diagram (http://projects.wojtekmaj.pl/react-lifecycle-methods-diagram/).
-
-    Steps:
-        
-        ☑ Try conditional rendering
-        ☑ Try to replace the event management with a built in system (EventTarget)
-
-    Questions:
-
-        ☑ How do I create a hello world SPA? Do I create a HTML template and insert react controls? Do I create a root control and all the other react controls nested on it?
-            Both options seem possible. I'll try to go for having a root React component.
-        ☑ Does the tab component contain a panel that is changed everytime? it seems it does not.
-        ☑ Can we make a REST GET query and populate the data accordingly (rows and columns)? We will not be able to populate the columns if the request contains no entity (could this be useful https://www.django-rest-framework.org/tutorial/7-schemas-and-client-libraries/?).
-            We are setting the columns as props and updating the control with a callback
-        ☑ Can we have only one component for the table (and have a specialization of it whenever we need something different)? Yes
-        ☑ We are introducing listeners, pointers to our component. This means that the memory used by it will not be freed if the component is not necessary anymore. How are components instantiated and how long do they live? It seems that render reuses components, but if the component is between braces, they are instantiated on each render.
-        ☑ How does conditional rendering (https://reactjs.org/docs/conditional-rendering.html) affects the child component lifecycle? In any case we cannot use it because the condition would be used inside the JSX code.
-        ☐ How do I babelize the result?
-
-
-# 8h: 
-
-    I could not manage to free the memory of the child components between curly braces, so from now on I'll try not to use that syntax. In any case it is more performant.
-    If you use create-react-app, you can customize everything by *ejecting*: https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/template/README.md#npm-run-eject
-
-    Steps:
-
-        ☑ Try to put the data in the components in different ways
-            ☑ with a listener
-                ☑ remove the association at component destruction and fix the memory leak
-            ☑ is it possible to set it as a property in the root of the tree and pass it down the tree? sounds like a lot for big trees, so we do not do it.
-            ☑ is it possible to set it as properties? I do nor care.
-        ☑ Recover the previous implementation in order not to lose the contents of the table (or can we still find a solution with these short lived objects?)
-        ☑ Package it for reuse.
-
-    Questions:
-
-        ☑ How do I create a hello world SPA? Do I create a HTML template and insert react controls? Do I create a root control and all the other react controls nested on it?
-            Both options seem possible. I'll try to go for having a root React component.
-        ☑ Does the tab component contain a panel that is changed everytime? it seems it does not.
-        ☑ Can we make a REST GET query and populate the data accordingly (rows and columns)? We will not be able to populate the columns if the request contains no entity (could this be useful https://www.django-rest-framework.org/tutorial/7-schemas-and-client-libraries/?).
-            We are setting the columns as props and updating the control with a callback
-        ☑ Can we have only one component for the table (and have a specialization of it whenever we need something different)? Yes
-        ☑ We are introducing listeners, pointers to our component. This means that the memory used by it will not be freed if the component is not necessary anymore. How are components instantiated and how long do they live? It seems that render reuses components, but if the component is between braces, they are instantiated on each render.
-        ☑ How does conditional rendering (https://reactjs.org/docs/conditional-rendering.html) affects the child component lifecycle? In any case we cannot use it because the condition would be used inside the JSX code.
-        ☑ How do I babelize the result? It is babelized, you can eject and edit the defaults.
