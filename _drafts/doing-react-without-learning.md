@@ -1,11 +1,11 @@
-☐ Try to embed the application on each step of the tutorial?
+☐ re-read
 ☐ Publish
 
 # The minimum you need to know in order to build a React application
 
 Recently I had to build a small React interface with a bit of a time pressure so I decided to build it "without learning React". Normally I read the documentation of the tools I work with but in this case it will be different: I will search for the different aspects of React as I need them in order to build the application. As a result, what I learned is "the minimum you need in order to know to build a React application". Let's go.
 
-The application will be two tabs, each one showing a counter that is populated in response to a (faked) asynchronous query. [Like this](/react-post/index.html).
+The application will be two tabs, each one showing a counter that is populated in response to a (faked) asynchronous query. [Like this](/react-post/v7/index.html).
 
 The whole thing took 8 hours to build. Hopefully this post can save you that time!
 
@@ -204,6 +204,8 @@ Thus we could include our control in the call to *ReactDOM.render* specifying th
 ReactDOM.render(<MyComponent message="Hallo Welt Zähler: "/>, document.getElementById('root'));
 {% endhighlight %}
 
+[Here](https://github.com/fergonco/react-post/blob/375ab9e96c3d19998cdfbf9baf918ebbcb99661a/src/index.js) is the code so far. And [here](/react-post/v1/index.html) is a demo.
+
 BTW, React components can also be a function, but just ignore this and do not very scared if you see one.
 
 ## Counters inside tabs
@@ -214,7 +216,7 @@ Now we want to put the counters inside tabs and show one or the other depending 
 
 I didn't do any research on this, so there may be better options. However [Material UI](https://github.com/mui-org/material-ui) it seems a rather popular component repository, which follows the Google *Material*'s design, whatever that is. Cool components to reuse, in any case.
 
-The [demo page](https://material-ui.com/demos/tabs/) has links to the GitHub repository with the code, which is useful to understand how to use the components.
+The MaterialUI Tabs [demo page](https://material-ui.com/demos/tabs/) has links to the GitHub repository with the code, which is useful to understand how to use the components.
 
 ### The tabs
 
@@ -242,7 +244,7 @@ ReactDOM.render((
 
 Basically we nest two *Tab* components inside a *Tabs* component. The *value* property in the *Tab* instances is used as identifier and the one in the *Tabs* instance points to the *Tab* that we want to select. So far we are not placing our component in the tabs.
 
-The code can be found [here](https://github.com/fergonco/react-post/blob/4944e4b29f1af2014cae2c0de015d3fdd2335472/src/index.js).
+[Here](https://github.com/fergonco/react-post/blob/4944e4b29f1af2014cae2c0de015d3fdd2335472/src/index.js) is the code so far and [here](/react-post/v2/index.html) is a demo.
 
 ### Selecting the tabs
 
@@ -279,7 +281,7 @@ ReactDOM.render(<TabsContainer/>, document.getElementById('root'));
 
 Now, when *changeTab* is invoked in response to a tab change, the state of *TabsContainer* will be updated and rendered again, along with the children components Tabs and Tab.
 
-The code can be found [here](https://github.com/fergonco/react-post/blob/780cd504a82585c6111590eb6cdd2f33d3fc790b/src/index.js).
+The code can be found [here](https://github.com/fergonco/react-post/blob/780cd504a82585c6111590eb6cdd2f33d3fc790b/src/index.js) and [here](/react-post/v3/index.html) is a demo.
 
 ### Showing one span or the other
 
@@ -304,7 +306,7 @@ render() {
 
 Where all the controls are wrapped inside a *div* (you cannot define several components in a JSX expression) and the *MyComponent* instances are evaluated between curly braces conditionally to the value of *this.state.selectedTab*. This is however a bad idea because a new component gets instantiated on each render. If you see the resulting application, changing tabs makes the counters start at zero every time (because it is a new one).
 
-The code can be found [here](https://github.com/fergonco/react-post/blob/dbace48eed05bb9d33c7b47e5ba14d5c4832045b/src/index.js).
+The code can be found [here](https://github.com/fergonco/react-post/blob/dbace48eed05bb9d33c7b47e5ba14d5c4832045b/src/index.js) and [here](/react-post/v4/index.html) is a demo.
 
 This approach is specially dangerous if the component is listening some event, or if there is somewhere in the application a reference to it, because we will be creating a lot of components that we no longer use whose memory cannot be freed because they are still referenced, a.k.a. memory leak.
 
@@ -339,7 +341,7 @@ render() {
 
 Thus, react will be intelligent enough to reuse the instances of *MyComponent* created at each execution of *render*. Which is great from the performance point of view and also not so sensitive to memory leaks as the previous approach.
 
-The code can be found [here](https://github.com/fergonco/react-post/blob/6da2e3772b27184f3892ca911bcc5c8256a7f60f/src/index.js).
+The code can be found [here](https://github.com/fergonco/react-post/blob/6da2e3772b27184f3892ca911bcc5c8256a7f60f/src/index.js) and [here](/react-post/v5/index.html) is a demo.
 
 ### Getting some information into the control after an asynchronous call
 
@@ -407,7 +409,7 @@ Note that we have two events: *counter1-init* and *counter2-init*, so the event 
 [...]
 {% endhighlight %}
 
-The code can be found [here](https://github.com/fergonco/react-post/blob/ed271755b1c483a3b745f234691e4bb97b677e6f/src/index.js).
+The code can be found [here](https://github.com/fergonco/react-post/blob/ed271755b1c483a3b745f234691e4bb97b677e6f/src/index.js) and [here](/react-post/v6/index.html) is a demo.
 
 #### Components life cycle 
 
@@ -453,7 +455,7 @@ class MyComponent extends React.Component {
 }
 {% endhighlight %}
 
-The code can be found [here](https://github.com/fergonco/react-post/blob/87161e324f0f00e90501767fae180312b49b06f4/src/index.js).
+The code can be found [here](https://github.com/fergonco/react-post/blob/87161e324f0f00e90501767fae180312b49b06f4/src/index.js) and [here](/react-post/v7/index.html) is a demo.
 
 I did some tests with the previous syntax:
 
