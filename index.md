@@ -7,20 +7,13 @@ title: Fernando González Cortés
 
 Working as a professional developer since 2003. I have +15 years of experience with geographical information, specially building GIS tools.
 
-I am self-taught person. I started reading a Basic reference documentation when I was 13. It took me a while to understand that "character" was not about my computer personality. Big letdown. Currently trying to get to a decent level on statistics and machine learning.
+My LinkedIn profile: [https://www.linkedin.com/in/fergonco/](https://www.linkedin.com/in/fergonco/).
 
-I try to get a deep knowledge of the technologies I work with. I have worked with these:
+My Github profile: [https://github.com/fergonco/](https://github.com/fergonco/).
 
-* GeoServer
-* PostgreSQL/PostGIS
-* Javascript/Webpack/Babel/HTML/CSS
-* GDAL, Geotools, JTS
-* Java, Spring
-* Python, Django
-* Junit, Mockito, Jasmine, Jenkins, Travis
-* Git
+I have a blog: [http://fergonco.org/blog.html](http://fergonco.org/blog.html).
 
-I am a founder member of geomati.co (http://geomati.co)
+I am a founder member of [geomati.co](http://geomati.co/en).
 
 # Works
 <!--
@@ -38,7 +31,6 @@ I have developed on my own:
 
 # Team work
 -->
-You can take a look at my daily activities in my [blog](/blog.html).
 
 A list of my personal projects (to be completed!):
 
@@ -49,4 +41,3 @@ My last work:
 
 * [Bankgeheimnisse](https://www.bankgeheimnisse.ch) / [Secrets bancaires](http://secrets-bancaires.ch/): A live community of bench loving people.
 
-I am a founder member of [geomati.co](http://geomati.co)
