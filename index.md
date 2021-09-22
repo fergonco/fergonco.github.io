@@ -11,4 +11,6 @@ My LinkedIn profile: [https://www.linkedin.com/in/fergonco/](https://www.linkedi
 
 My Github profile: [https://github.com/fergonco/](https://github.com/fergonco/).
 
-I have a blog: [https://fergonco.org/blog.html](http://fergonco.org/blog.html).
+I have a blog: [https://fergonco.org/blog.html](https://fergonco.org/blog.html).
+
+And a mentoring program: [https://fernandomentor.com](https://fernandomentor.com).
