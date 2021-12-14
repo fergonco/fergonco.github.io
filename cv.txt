@@ -1,0 +1,170 @@
+Fernando González Cortés
+------------------------
+
+Address: Ribarroja de Turia, Spain
+Email: fergonco@gmail.com
+
+TECHNOLOGIES AND LANGUAGES
+--------------------------
+
+* Cloud providers and services:
+
+    * GCP: Kubernetes Engine, Cloud Build, Cloud Storage, Pub/Sub, Cloud SQL,
+      Cloud Monitoring, Cloud logging.
+
+    * AWS: EC2, Route 53
+
+* Build/Deployment: Kubernetes, Kustomize, Helm, Kong, Gradle, Maven, Jenkins.
+
+* Monitoring: Prometheus, Datadog, Grafana
+
+* Messaging: ActiveMQ, Google Cloud Pub/Sub, Kafka, Azure Event hubs.
+
+* Interfaces: REST, GRPC
+
+* Database: PostgreSQL, PostGIS, Hibernate, MongoDB.
+
+* Languages: Java, Golang, ECMAScript6, Python, Bash.
+
+* Backend: Spring Boot, Golang.
+
+* Frontend: React, react-admin.
+
+* GIS: OSM, Mapbox, GeoServer, Leaflet, GDAL.
+
+* Machine learning: Weka, R.
+
+WORK EXPERIENCE
+---------------
+
+## Software Engineer III - Juni Technology AB (April 2022 - current)
+
+Developed different parts of the microservice architecture using Golang, gorm
+and PostgreSQL for persistence, Kafka and GRPC for interservice communication,
+Helm and k8s for deployment, Datadog for monitoring and Gitlab for CI/CD.
+
+## Freelance (Nov 2021 - March 2022)
+
+* Developed Java clients for different cryptocurrency exchange APIs for Menai
+  Financial Group, through Toptal.
+
+* Worked on a traffic control application for Siemens (Yunex Traffic), using
+  Java, Spring, K8s, Helm.
+
+## Staff Engineer           - Parknav - (Dec 2020 - Jul 2021)
+## Senior Software Engineer - Parknav - (Feb 2019 - Dec 2020)
+
+* Implemented the CI/CD system in charge of deploying the company production
+  services using a Gradle plugin and Google Cloud Build.
+
+* Normalized the K8s deployment scripts of all company services using Kustomize.
+  Built a command line interface to manage the deployment of all services and
+  jobs using Slack, Spring Shell and Google Pub/Sub.
+
+* Managed GCP project and deployed services in production.
+
+* Replaced an Azure API gateway by an installation of Kong Ingress in our own
+  clusters, saving the company 2000$/month.
+
+* Reduced cluster memory requirements to 80% by optimizing the memory usage in
+  city probability calculation services.
+
+* Built from scratch a microservice serving garage data: implementation,
+  testing, scaling, figuring out and implementing pricing models, etc.
+
+* Implemented an outdoor sensor solution that sends data to our services in real
+  time using Raspberry PIs and Spring services hosted in the company K8s
+  cluster.
+
+* Applied machine learning models in order to merge two garage databases
+  automatically using Weka, reducing the need for manual intervention.
+
+* Reduced the cost of migrating map data between two OSM versions by writting an
+  algorithm that matches ways while navigating both OSM graphs, old and new,
+  simultaneously.
+
+* Developed the company data portal (https://portal.parknav.com) using Spring,
+  Postgresql, React-admin and Firebase authentication.
+
+* Developed a portal to show case the company parking probabilities service
+  (https://places.parknav.com) using Mapbox Vector Tiles.
+
+## Freelance - Several clients - (Oct 2016 - Dec 2018)
+
+* Developed a web application (https://www.bankgeheimnisse.ch/map) for the
+  Association for the promotion of Swiss bench culture, for documenting benches
+  in Switzerland using Spring, PostgreSQL and AWS Beanstalk. The application had
+  around 7000 benches and 600 users at the moment of leaving and it has
+  continued to grow.
+
+* Developed on my own initiative a real time map of public transport speed in
+  Pays de Gex / Geneva showing current status, past data and 24 hours of
+  predictions. Used R for the statistical models, PostGIS for storing data,
+  GeoServer for serving it and HTML/CSS/JS to present it.
+
+* Automated the process chain to transform remote sensing data in vector formats
+  consumed by agriculture machinery, using Python GDAL bindings.
+
+## Geospatial Software Engineer at FAO / United Nations (Jan 2013 - Sep 2016)
+
+* Developed a web application to publish country national forest data in the
+  context of the different national REDD programs using PostgreSQL/PostGIS,
+  GeoServer, Servlet API and jQuery.
+
+* Deployed the application in Argentina, Paraguay and Ecuador.
+
+* Created data publication pipelines that reduced publication times by 25%,
+  using Python, GDAL and Geoserver REST API.
+
+* Automated testing and continuous integration in Travis CI.
+
+* Fixed GeoServer bug: https://osgeo-org.atlassian.net/browse/GEOS-7243.
+
+## Freelance (Sep 2008 - Dec 2013)
+
+* Developed a mobile client for a collaborative mapping platform using Android.
+
+* Developed a web tool to plan geotechnical studies for the Valencian Institute
+  of Building using Google Web Toolkit.
+
+* Built an application for image quality control in the context of the National
+  Plan for Aerial Orthophotography in Extremadura region, Spain, using Java
+  Advanced Imaging.
+
+* Developed an algorithm to calculate radiation and visibility in 3d urban
+  environments using Java and JTS.
+
+* Developed a domain specific language to process spatial data regardless of its
+  location (database, file, web service) or format (shapefile, GML, PostGIS,
+  TIFF, JPEG, etc.) using Java, Javacc and JTS.
+
+## Research Engineer at IRSTV-CNRS FR2488 (Apr 2007 - Jul 2008)
+
+* Development of OrbisGIS, a GIS desktop application with a SQL engine
+  middleware to query data in different formats and locations.
+
+## Freelance (Mar 2005 - Mar 2007)
+
+* University of Castilla-La Mancha: Different projects related with webmapping
+  and GIS desktop applications.
+
+## Java Software Engineer at IVER T.I. (Mar 2002 - Dec 2004)
+
+* Developed the core of gvSIG, an open source desktop GIS application:
+  http://www.gvsig.com/en/products/gvsig-desktop
+
+EDUCATION
+---------
+
+* 2003: Master's degree in software engineering at Universidad Politécnica de
+  Valencia.
+
+* Fluent in Spanish, English, French and German.
+
+EXTRACURRICULAR
+---------------
+
+* Toptal talent: https://www.toptal.com/resume/fernando-gonzalez-cortes
+* I have a blog: https://fergonco.org/blog.html
+* Text based notation to write midi: http://fergonco.org/MusicJargon/
+* Disk based Rtree implementation: https://github.com/fergonco/rtree
