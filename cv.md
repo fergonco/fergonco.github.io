@@ -5,7 +5,8 @@ fontfamily: arev
 
 # FERNANDO GONZALEZ CORTES
 
-* Address: Ribarroja de Turia, Spain
+* Address: c/Vinalopó 19, Ribarroja de Turia, 46190, Spain
+* Telephone: +34 679669957
 * Email: fergonco@gmail.com
 
 ## TECHNOLOGIES AND LANGUAGES

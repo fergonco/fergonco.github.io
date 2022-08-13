@@ -16,3 +16,10 @@ then
     echo "Generating pdf cv"
     pandoc cv.md -o cv.pdf
 fi
+
+if [ "$1" == "pdf-linkedin" ] || [ "$1" == "all" ]
+then
+    echo "Generating pdf linked in cv"
+    sed '/Telephone/d' cv.md | sed '/Address/d' > /tmp/cv.md
+    pandoc /tmp/cv.md -o cv-linkedin.pdf
+fi
