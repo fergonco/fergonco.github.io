@@ -11,10 +11,8 @@ fontfamily: arev
 
 ## TECHNOLOGIES AND LANGUAGES
 
-* Cloud providers and services:
-
-    * AWS, EC2, EKS, GCP, GKE, Cloud Build, Cloud Storage, Pub/Sub, Cloud SQL,
-      Cloud Monitoring, Cloud logging.
+* Cloud providers and services: AWS, EC2, EKS, GCP, GKE, Cloud Build, Cloud
+  Storage, Pub/Sub, Cloud SQL, Cloud Monitoring, Cloud logging.
 
 * Build/Deployment: Kubernetes, Kustomize, Helm, Gradle, Maven, Jenkins.
 
