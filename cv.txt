@@ -8,29 +8,27 @@ TECHNOLOGIES AND LANGUAGES
 
 -   Cloud providers and services:
 
-    -   GCP: Kubernetes Engine, Cloud Build, Cloud Storage, Pub/Sub,
+    -   AWS, EC2, EKS, GCP, GKE, Cloud Build, Cloud Storage, Pub/Sub,
         Cloud SQL, Cloud Monitoring, Cloud logging.
 
-    -   AWS: EC2, Route 53
-
--   Build/Deployment: Kubernetes, Kustomize, Helm, Kong, Gradle, Maven,
+-   Build/Deployment: Kubernetes, Kustomize, Helm, Gradle, Maven,
     Jenkins.
 
 -   Monitoring: Prometheus, Datadog, Grafana
 
--   Messaging: ActiveMQ, Google Cloud Pub/Sub, Kafka, Azure Event hubs.
+-   Messaging: Kafka, ActiveMQ, Google Cloud Pub/Sub, Azure Event hubs.
 
 -   Interfaces: REST, GRPC
 
--   Database: PostgreSQL, PostGIS, Hibernate, MongoDB.
+-   Data: PostgreSQL, PostGIS, Hibernate, Gorm, MongoDB, BigQuery.
 
--   Languages: Java, Golang, ECMAScript6, Python, Bash.
+-   Languages: Java, Golang, ECMAScript6/Javascript, Python, Bash.
 
 -   Backend: Spring Boot, Golang.
 
 -   Frontend: React, react-admin.
 
--   GIS: OSM, Mapbox, GeoServer, Leaflet, GDAL.
+-   GIS: PostGIS, OSM, Mapbox, GeoServer, Leaflet, GDAL.
 
 -   Machine learning: Weka, R.
 
@@ -38,10 +36,16 @@ WORK EXPERIENCE
 
 Software Engineer III - Juni Technology AB (April 2022 - current)
 
-Developed different parts of the microservice architecture using Golang,
-gorm and PostgreSQL for persistence, Kafka and GRPC for interservice
-communication, Helm and k8s for deployment, Datadog for monitoring and
-Gitlab for CI/CD.
+-   Extracted some responsibilities from a monolithic service into a new
+    service following clean architecture guidelines and using Golang,
+    gorm and PostgreSQL for persistence, Kafka and GRPC for interservice
+    communication, Helm and k8s for deployment, Datadog for monitoring,
+    Gitlab for CI/CD. Analytics importing production database with
+    BigQuery.
+
+-   Improved customer onboarding process implementing a flow to request
+    them more information, in the context of the kyb process (Know Your
+    Business).
 
 Freelance (Nov 2021 - March 2022)
 
@@ -50,6 +54,8 @@ Freelance (Nov 2021 - March 2022)
 
 -   Worked on a traffic control application for Siemens (Yunex Traffic),
     using Java, Spring, K8s, Helm.
+
+Moved with my family from France to Spain - (Jul 2021 - Nov 2021)
 
 Staff Engineer - Parknav - (Dec 2020 - Jul 2021)
 
