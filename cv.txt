@@ -32,7 +32,21 @@ TECHNOLOGIES AND LANGUAGES
 
 WORK EXPERIENCE
 
-Software Engineer III - Juni Technology AB (April 2022 - current)
+Freelance at Scaleway - lead French cloud provider (Dec 2022 - now)
+---------------------------------------------------------------------
+
+-   Added FerretDB support to the managed database product.
+
+-   Implementation in Golang of a serverless database from scratch. Currently
+    entering private Beta. Worked on all aspects of the project:
+
+      * Architectural choices
+      * Implementation and testing
+      * Setting up of the infrastructure
+      * Metrics and logs aggregation
+
+Software Engineer III - Juni Technology AB (April 2022 - Dec 2022)
+---------------------------------------------------------------------
 
 -   Extracted some responsibilities from a monolithic service into a new
     service following clean architecture guidelines and using Golang,
@@ -42,10 +56,10 @@ Software Engineer III - Juni Technology AB (April 2022 - current)
     BigQuery.
 
 -   Improved customer onboarding process implementing a flow to request
-    them more information, in the context of the kyb process (Know Your
-    Business).
+    more information, in the context of the KYB process (Know Your Business).
 
 Freelance (Nov 2021 - March 2022)
+---------------------------------------------------------------------
 
 -   Developed Java clients for different cryptocurrency exchange APIs
     for Menai Financial Group, through Toptal.
@@ -58,6 +72,7 @@ Moved with my family from France to Spain - (Jul 2021 - Nov 2021)
 Staff Engineer - Parknav - (Dec 2020 - Jul 2021)
 
 Senior Software Engineer - Parknav - (Feb 2019 - Dec 2020)
+---------------------------------------------------------------------
 
 -   Implemented the CI/CD system in charge of deploying the company
     production services using a Gradle plugin and Google Cloud Build.
@@ -98,6 +113,7 @@ Senior Software Engineer - Parknav - (Feb 2019 - Dec 2020)
     service (https://places.parknav.com) using Mapbox Vector Tiles.
 
 Freelance - Several clients - (Oct 2016 - Dec 2018)
+---------------------------------------------------------------------
 
 -   Developed a web application (https://www.bankgeheimnisse.ch/map) for
     the Association for the promotion of Swiss bench culture, for
@@ -116,6 +132,7 @@ Freelance - Several clients - (Oct 2016 - Dec 2018)
     bindings.
 
 Geospatial Software Engineer at FAO / United Nations (Jan 2013 - Sep 2016)
+---------------------------------------------------------------------
 
 -   Developed a web application to publish country national forest data
     in the context of the different national REDD programs using
@@ -132,6 +149,7 @@ Geospatial Software Engineer at FAO / United Nations (Jan 2013 - Sep 2016)
     https://osgeo-org.atlassian.net/browse/GEOS-7243.
 
 Freelance (Sep 2008 - Dec 2013)
+---------------------------------------------------------------------
 
 -   Developed a mobile client for a collaborative mapping platform using
     Android.
@@ -152,23 +170,26 @@ Freelance (Sep 2008 - Dec 2013)
     JTS.
 
 Research Engineer at IRSTV-CNRS FR2488 (Apr 2007 - Jul 2008)
+---------------------------------------------------------------------
 
 -   Development of OrbisGIS, a GIS desktop application with a SQL engine
     middleware to query data in different formats and locations.
 
 Freelance (Mar 2005 - Mar 2007)
+---------------------------------------------------------------------
 
 -   University of Castilla-La Mancha: Different projects related with
     webmapping and GIS desktop applications.
 
 Java Software Engineer at IVER T.I. (Mar 2002 - Dec 2004)
+---------------------------------------------------------------------
 
 -   Developed the core of gvSIG, an open source desktop GIS application:
     http://www.gvsig.com/en/products/gvsig-desktop
 
 EDUCATION
 
--   2003: Master’s degree in software engineering at Universidad
+-   2003: Master's degree in software engineering at Universidad
     Politécnica de Valencia.
 
 -   Fluent in Spanish, English, French and German.
