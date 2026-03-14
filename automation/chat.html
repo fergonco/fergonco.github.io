@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Chat – Automatización</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Page-local additions (keeps site look & feel) */
+    .chat-shell { max-width: 980px; margin: 0 auto; padding: 18px; }
+    .chat-card { background: #ffffff; border: 1px solid rgba(0,0,0,.08); border-radius: 14px; overflow: hidden; box-shadow: 0 8px 22px rgba(0,0,0,.06); }
+    .chat-header { padding: 14px 16px; border-bottom: 1px solid rgba(0,0,0,.08); display:flex; align-items:center; justify-content:space-between; gap:12px; }
+    .chat-header h1 { font-size: 16px; margin:0; }
+    .chat-meta { font-size: 12px; opacity: .75; }
+    #messages { height: 70vh; overflow:auto; padding: 16px; display:flex; flex-direction:column; gap: 10px; background: linear-gradient(180deg, rgba(0,0,0,.02), transparent 18%); }
+    .msg { max-width: 80%; padding: 10px 12px; border-radius: 14px; white-space: pre-wrap; line-height: 1.35; border: 1px solid rgba(0,0,0,.08); }
+    .user { align-self:flex-end; background: rgba(62,110,255,.10); }
+    .bot  { align-self:flex-start; background: rgba(0,0,0,.03); }
+    .row { display:flex; gap:10px; padding: 12px; border-top: 1px solid rgba(0,0,0,.08); }
+    input[type=text] { flex:1; padding: 12px 12px; border-radius: 12px; border:1px solid rgba(0,0,0,.14); background: #fff; color: #111; outline:none; }
+    button { padding: 12px 14px; border-radius: 12px; border:1px solid rgba(0,0,0,.14); background: #111; color:#fff; cursor:pointer; }
+    button:disabled { opacity:.65; cursor:not-allowed; }
+    .hint { padding: 10px 16px; font-size: 12px; opacity: .75; border-top:1px dashed rgba(0,0,0,.15); }
+    code { background: rgba(0,0,0,.06); padding: 2px 6px; border-radius: 6px; }
+    .links { padding: 10px 16px; display:flex; gap:10px; justify-content:flex-start; border-bottom:1px solid rgba(0,0,0,.08); }
+    .links a { font-size: 13px; text-decoration: none; }
+  </style>
+</head>
+<body>
+<header>
+  <h1>🚀 Automatización para PYMEs</h1>
+  <p>Asistente de chat (basado en Flowise)</p>
+</header>
+
+<div class="chat-shell">
+  <div class="chat-card">
+    <div class="links">
+      <a href="index.html">← Volver</a>
+    </div>
+
+    <div class="chat-header">
+      <div>
+        <h1>Asistente</h1>
+        <div class="chat-meta">Pregunta sobre automatización, casos de uso y siguientes pasos</div>
+      </div>
+      <div class="chat-meta">Flow ID: <code id="flowId"></code></div>
+    </div>
+
+    <div id="messages"></div>
+
+    <div class="row">
+      <input id="text" type="text" placeholder="Escribe tu pregunta..." autocomplete="off" />
+      <button id="send">Enviar</button>
+    </div>
+
+    <div class="hint">
+      Este chat llama a <code>https://cloud.flowiseai.com/api/v1/prediction/&lt;FLOW_ID&gt;</code> directamente desde tu navegador.
+      Implicación: el endpoint es público y podría ser abusado por terceros (coste). Si eso te preocupa, usa un proxy con rate-limit.
+    </div>
+  </div>
+</div>
+
+<script>
+  // ---- CONFIG ----
+  const FLOWISE_BASE_URL = 'https://cloud.flowiseai.com';
+  const FLOW_ID = 'dceb6025-fee5-4f3d-a4ba-02eee46c9605';
+  const FLOWISE_API_KEY = ''; // public
+
+  document.getElementById('flowId').textContent = FLOW_ID;
+
+  const messagesEl = document.getElementById('messages');
+  const inputEl = document.getElementById('text');
+  const sendBtn = document.getElementById('send');
+
+  function uuidFallback() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+      const r = (Math.random() * 16) | 0;
+      const v = c === 'x' ? r : (r & 0x3) | 0x8;
+      return v.toString(16);
+    });
+  }
+  const chatId = (window.crypto && typeof window.crypto.randomUUID === 'function')
+    ? window.crypto.randomUUID()
+    : uuidFallback();
+
+  function addMessage(text, who) {
+    const div = document.createElement('div');
+    div.className = `msg ${who}`;
+    div.textContent = text;
+    messagesEl.appendChild(div);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  function setBusy(busy) {
+    sendBtn.disabled = busy;
+    inputEl.disabled = busy;
+  }
+
+  async function sendMessage() {
+    const question = inputEl.value.trim();
+    if (!question) return;
+
+    addMessage(question, 'user');
+    inputEl.value = '';
+    inputEl.focus();
+
+    setBusy(true);
+    try {
+      const endpoint = `${FLOWISE_BASE_URL}/api/v1/prediction/${FLOW_ID}`;
+      const payload = { question, chatId };
+
+      const headers = { 'Content-Type': 'application/json' };
+      if (FLOWISE_API_KEY) headers['Authorization'] = `Bearer ${FLOWISE_API_KEY}`;
+
+      const ctrl = new AbortController();
+      const t = setTimeout(() => ctrl.abort(), 60000);
+
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(payload),
+        signal: ctrl.signal
+      }).finally(() => clearTimeout(t));
+
+      if (!res.ok) {
+        const t = await res.text();
+        throw new Error(`HTTP ${res.status}: ${t}`);
+      }
+
+      const data = await res.json();
+      addMessage(data.text ?? JSON.stringify(data, null, 2), 'bot');
+    } catch (e) {
+      const msg = (e && e.name === 'AbortError')
+        ? 'Tiempo de espera agotado. Inténtalo de nuevo.'
+        : String(e && e.message ? e.message : e);
+      addMessage(`Error: ${msg}`, 'bot');
+      console.error(e);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  sendBtn.addEventListener('click', sendMessage);
+  inputEl.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') sendMessage();
+  });
+
+  addMessage('Hola. ¿En qué puedo ayudarte hoy?', 'bot');
+</script>
+</body>
+</html>
