@@ -2,8 +2,6 @@
 layout: default
 title: Fergonco's log
 ---
-# {{ page.title }}
-
 <ul class="postlist">
 {% for post in site.posts %}
 {% if post.title == 'CI/CD at AI Incube' %}

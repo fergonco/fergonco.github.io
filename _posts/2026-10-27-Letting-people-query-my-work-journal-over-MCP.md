@@ -13,42 +13,46 @@ Since 2019 I have been keeping a journal of my work activities. It is
 unstructured Markdown with each day's date followed by whatever analysis,
 commands, or ideas came to my mind that day. For example:
 
-> 08 Jul 2024
-> ===========
->
-> Analyzed Thomas ticket and processed the data again. Will compare later.
->
-> ---
->
-> Got dragged to the configuration changes from PG 11 to 15.
->
->     diff --git a/pg11-sorted b/pg15-sorted
->     index a778f19..5a6266e 100644
->     --- a/pg11-sorted
->     +++ b/pg15-sorted
->     @@ -1,9 +1,11 @@
->
->     This was changed from default in PG11. Can help the server to breath [sic] if autovacuum is consuming too many resources.
->
->     - autovacuum_vacuum_cost_delay | 20ms
->     + autovacuum_vacuum_cost_delay | 2ms
->
->     We have duplicated autovacuum work mem 1Gb (-1 = maintenance_work_mem = 1Gb) to 2Gb
->
->     - autovacuum_work_mem | -1
->     + autovacuum_work_mem | 2029088kB
-> ...
+```
+08 Jul 2024
+===========
+
+Analyzed Thomas ticket and processed the data again. Will compare later.
+
+---
+
+Got dragged to the configuration changes from PG 11 to 15.
+
+    diff --git a/pg11-sorted b/pg15-sorted
+    index a778f19..5a6266e 100644
+    --- a/pg11-sorted
+    +++ b/pg15-sorted
+    @@ -1,9 +1,11 @@
+
+    This was changed from default in PG11. Can help the server to breath [sic] if autovacuum is consuming too many resources.
+
+    - autovacuum_vacuum_cost_delay | 20ms
+    + autovacuum_vacuum_cost_delay | 2ms
+
+    We have duplicated autovacuum work mem 1Gb (-1 = maintenance_work_mem = 1Gb) to 2Gb
+
+    - autovacuum_work_mem | -1
+    + autovacuum_work_mem | 2029088kB
+...
+```
 
 Or recently, something I'm proud of:
 
-> 17 Aug 2026
-> ===========
->
-> Ran an optimization loop during the weekend.
->
-> The baseline was a 190Mb zip from production that took 3h20. now takes 27min.
->
-> I need to review that PR and ask for human review.
+```
+17 Aug 2026
+===========
+
+Ran an optimization loop during the weekend.
+
+The baseline was a 190Mb zip from production that took 3h20. now takes 27min.
+
+I need to review that PR and ask for human review.
+```
 
 The journal is very useful in itself as a reference whenever I need to find a
 command I already ran. It also helps me slow down and focus on the days when

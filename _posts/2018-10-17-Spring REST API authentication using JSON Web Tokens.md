@@ -4,8 +4,6 @@ title: 'Spring REST API authentication using JSON Web Tokens'
 date: 2018-10-17
 ---
 
-# Spring REST API authentication using JSON Web Tokens
-
 In the [last post](http://fergonco.org/2018/10/12/Form-based-authentication-on-single-page-applications-with-Spring-Security.html) I showed how to implement form-based authentication with Spring Security in the context of a Single Page Application. Plugging our own implementation in some points of the Spring Security model allowed to have custom response codes to the login and logout endpoints while keeping the default logic: session creation, response with the Set-Cookie header containing the id of the session, etc.
 
 However, this approach is not suitable for REST APIs. The fact that the server keeps a session with information about the user is in conflict with the REST stateless principle:

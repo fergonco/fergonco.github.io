@@ -4,8 +4,6 @@ title: 'The minimum you need to know in order to build a React application'
 date: 2018-11-07
 ---
 
-# The minimum you need to know in order to build a React application
-
 Recently I had to build a small React interface with a bit of time pressure. The problem was that I didn't know anything about React so I had to learn quickly. Normally I like to read the documentation in depth but this time I decided to focus on coding and just look the documentation as I get stuck. As a result, what I learned is "the minimum you need in order to know to build a React application". Let's go.
 
 The application consisted in two tabs, each one showing a click counter that is initialized in response to a (faked) asynchronous query. [Like this](/react-post/v7/index.html).
