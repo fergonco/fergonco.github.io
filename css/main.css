@@ -28,6 +28,13 @@ p {
     line-height: 1.4em;
     color: #333;
 }
+blockquote {
+    border-left: 4px solid #d5d5d5;
+    margin: 20px 0;
+    padding-left: 20px;
+    color: #555;
+    font-style: italic;
+}
 footer {
     border-top: 1px solid #d5d5d5;
     font-size: .8em;

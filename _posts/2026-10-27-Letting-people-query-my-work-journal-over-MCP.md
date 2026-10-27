@@ -158,4 +158,4 @@ and some more yada yada slop yada yada.
 Just remember, behind all that slop, there are the real notes of an engineer
 who loved his work before AI.
 
-If you want to give it a try, visit: https://hire-me.fergonco.org/
+If you want to give it a try, visit: [https://hire-me.fergonco.org/](https://hire-me.fergonco.org/)
