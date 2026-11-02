@@ -71,31 +71,23 @@ interviewing me". In some cultures you can place references in your CV and they
 actually get called. But this is not something that happened to me. I was never
 asked for references.
 
-And then came LLMs. I don't want to talk too much about the state of affairs in
-recruiting. It seems we went from lying on the CV to hiding prompts in the CV.
-I just want to focus on technical problems, not on gaming whatever process we
-built around work.
+And then came LLMs, which made matters worse. I don't want to talk much about
+the state of affairs in recruiting. It seems we went from lying on the CV to
+hiding prompts in the CV. I just want to focus on technical problems, not on
+gaming whatever process we built around work.
 
-And these two things came together:
+But LLMs can also be used positively. Can't we use them to fix the problem
+instead of making it worse? What if I allow LLMs to query my journals? That
+would benefit everybody:
 
-* "If only they knew how I work"
-* LLMs
-
-What if I allow LLMs to query my journals? It seemed a very cool idea on its
-own: I sometimes struggled to find things using syntactic search, so a more
-semantic search would be very useful. And if it can help me with the next job
-search, that will be awesome.
-
-I wanted something that takes a job description as input and returns some work
-experiences from my journals as output.
+* For me, it is good because I don't need to sell myself, which I do not do
+  well.
+* For the recruiting side, it is a reliable source to evaluate what type of
+  engineer I am.
 
 So I found myself building a tool to reverse the job search process: instead of
 getting my CV filtered out by a machine, I'll offer these machines a way to see
-what I did in the past. Everybody wins:
-
-* For me, it is good because I don't need to sell myself, which I do not do well.
-* For the recruiting side, it is a reliable source to evaluate what type of
-  engineer I am.
+what I did in the past.
 
 I know few people will use such a tool. But they will also be very
 special and I'm hoping, probably naively, this will bring me very interesting
@@ -129,12 +121,12 @@ agent/model by creating a service that does the search on my side, but that
 would increase costs.
 
 I gave Lucene a quick try and was not satisfied. In retrospect, it might have
-worked, but my naive attempt didn't.
+worked, but my naive (and vibe-coded) attempt didn't.
 
 I ended up creating embeddings using `ONNX` and
-`sentence-transformers/all-MiniLM-L6-v2`. The idea was to encode both the
-journal weeks and the input job description as vectors. Then get the nearest
-neighbours to the job description. This works very well: the model can run
+`sentence-transformers/all-MiniLM-L6-v2`. The idea was to encode as vectors
+both the journal weeks and the input job description. Then get the nearest
+neighbours to the job description. This worked very well: the model can run
 locally in a very small server and the response is very quick, so the user
 doesn't wait long while the job description embedding is computed.
 
@@ -145,7 +137,10 @@ myself so far. I use `pi.dev` and I ask the model to build whatever tooling I
 need as skills. But in this case it seemed like the right place because it
 guides the user LLM to the flow I want.
 
-In a different world, we wouldn't need all this. An HTTP form where somebody
+Essentially it's an MCP tool that takes a job description as input and returns
+weekly summaries from my journal as output.
+
+In a different world, we wouldn't need all this. An HTTP form, where somebody
 pastes the job description and some week summaries are shown in response would
 be enough. But that would output a dry weekly summary. Instead, this solution
 turns my dry weekly summaries into something like:
@@ -153,9 +148,10 @@ turns my dry weekly summaries into something like:
 > "Fernando is indeed a strong fit — it is not what he knows, it is how he
 > approaches engineering"
 
-and some more yada yada slop yada yada.
+and some more slop yada yada.
 
 Just remember, behind all that slop, there are the real notes of an engineer
-who loved his work before AI.
+who loved his work before LLMs.
 
-If you want to give it a try, visit: [https://hire-me.fergonco.org/](https://hire-me.fergonco.org/)
+If you want to give it a try, visit:
+[https://hire-me.fergonco.org/](https://hire-me.fergonco.org/)
